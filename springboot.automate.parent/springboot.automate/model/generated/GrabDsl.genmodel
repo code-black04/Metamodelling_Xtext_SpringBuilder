@@ -7,10 +7,50 @@
   <genPackages prefix="GrabDsl" basePackage="springboot.automate" disposableProviderFactory="true"
       fileExtensions="springdsl" ecorePackage="GrabDsl.ecore#/">
     <genClasses ecoreClass="GrabDsl.ecore#//Model">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//Model/greetings"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//Model/packageName"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//Model/packages"/>
     </genClasses>
-    <genClasses ecoreClass="GrabDsl.ecore#//Greeting">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//Greeting/name"/>
+    <genClasses ecoreClass="GrabDsl.ecore#//PackageDefinition">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//PackageDefinition/annotations"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//PackageDefinition/packageName"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//PackageDefinition/classes"/>
+    </genClasses>
+    <genClasses ecoreClass="GrabDsl.ecore#//ClassDefinition">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//ClassDefinition/annotations"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//ClassDefinition/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//ClassDefinition/members"/>
+    </genClasses>
+    <genClasses ecoreClass="GrabDsl.ecore#//MemberDefinition">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//MemberDefinition/annotations"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//MemberDefinition/method"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//MemberDefinition/property"/>
+    </genClasses>
+    <genClasses ecoreClass="GrabDsl.ecore#//MethodDefinition">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//MethodDefinition/annotations"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//MethodDefinition/visibility"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//MethodDefinition/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//MethodDefinition/parameters"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//MethodDefinition/returnType"/>
+    </genClasses>
+    <genClasses ecoreClass="GrabDsl.ecore#//PropertyDefinition">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//PropertyDefinition/annotations"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//PropertyDefinition/visibility"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//PropertyDefinition/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//PropertyDefinition/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//PropertyDefinition/defaultValue"/>
+    </genClasses>
+    <genClasses ecoreClass="GrabDsl.ecore#//ParameterDefinition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//ParameterDefinition/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//ParameterDefinition/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//ParameterDefinition/defaultValue"/>
+    </genClasses>
+    <genClasses ecoreClass="GrabDsl.ecore#//Annotation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//Annotation/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//Annotation/arguments"/>
+    </genClasses>
+    <genClasses ecoreClass="GrabDsl.ecore#//AnnotationArgument">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//AnnotationArgument/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//AnnotationArgument/value"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

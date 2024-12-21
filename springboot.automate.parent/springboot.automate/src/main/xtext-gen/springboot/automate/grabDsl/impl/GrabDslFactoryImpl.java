@@ -66,7 +66,14 @@ public class GrabDslFactoryImpl extends EFactoryImpl implements GrabDslFactory
     switch (eClass.getClassifierID())
     {
       case GrabDslPackage.MODEL: return createModel();
-      case GrabDslPackage.GREETING: return createGreeting();
+      case GrabDslPackage.PACKAGE_DEFINITION: return createPackageDefinition();
+      case GrabDslPackage.CLASS_DEFINITION: return createClassDefinition();
+      case GrabDslPackage.MEMBER_DEFINITION: return createMemberDefinition();
+      case GrabDslPackage.METHOD_DEFINITION: return createMethodDefinition();
+      case GrabDslPackage.PROPERTY_DEFINITION: return createPropertyDefinition();
+      case GrabDslPackage.PARAMETER_DEFINITION: return createParameterDefinition();
+      case GrabDslPackage.ANNOTATION: return createAnnotation();
+      case GrabDslPackage.ANNOTATION_ARGUMENT: return createAnnotationArgument();
       default:
         throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
     }
@@ -90,10 +97,94 @@ public class GrabDslFactoryImpl extends EFactoryImpl implements GrabDslFactory
    * @generated
    */
   @Override
-  public Greeting createGreeting()
+  public PackageDefinition createPackageDefinition()
   {
-    GreetingImpl greeting = new GreetingImpl();
-    return greeting;
+    PackageDefinitionImpl packageDefinition = new PackageDefinitionImpl();
+    return packageDefinition;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public ClassDefinition createClassDefinition()
+  {
+    ClassDefinitionImpl classDefinition = new ClassDefinitionImpl();
+    return classDefinition;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public MemberDefinition createMemberDefinition()
+  {
+    MemberDefinitionImpl memberDefinition = new MemberDefinitionImpl();
+    return memberDefinition;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public MethodDefinition createMethodDefinition()
+  {
+    MethodDefinitionImpl methodDefinition = new MethodDefinitionImpl();
+    return methodDefinition;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public PropertyDefinition createPropertyDefinition()
+  {
+    PropertyDefinitionImpl propertyDefinition = new PropertyDefinitionImpl();
+    return propertyDefinition;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public ParameterDefinition createParameterDefinition()
+  {
+    ParameterDefinitionImpl parameterDefinition = new ParameterDefinitionImpl();
+    return parameterDefinition;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public Annotation createAnnotation()
+  {
+    AnnotationImpl annotation = new AnnotationImpl();
+    return annotation;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public AnnotationArgument createAnnotationArgument()
+  {
+    AnnotationArgumentImpl annotationArgument = new AnnotationArgumentImpl();
+    return annotationArgument;
   }
 
   /**

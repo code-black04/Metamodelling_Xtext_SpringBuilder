@@ -81,9 +81,44 @@ public class GrabDslAdapterFactory extends AdapterFactoryImpl
         return createModelAdapter();
       }
       @Override
-      public Adapter caseGreeting(Greeting object)
+      public Adapter casePackageDefinition(PackageDefinition object)
       {
-        return createGreetingAdapter();
+        return createPackageDefinitionAdapter();
+      }
+      @Override
+      public Adapter caseClassDefinition(ClassDefinition object)
+      {
+        return createClassDefinitionAdapter();
+      }
+      @Override
+      public Adapter caseMemberDefinition(MemberDefinition object)
+      {
+        return createMemberDefinitionAdapter();
+      }
+      @Override
+      public Adapter caseMethodDefinition(MethodDefinition object)
+      {
+        return createMethodDefinitionAdapter();
+      }
+      @Override
+      public Adapter casePropertyDefinition(PropertyDefinition object)
+      {
+        return createPropertyDefinitionAdapter();
+      }
+      @Override
+      public Adapter caseParameterDefinition(ParameterDefinition object)
+      {
+        return createParameterDefinitionAdapter();
+      }
+      @Override
+      public Adapter caseAnnotation(Annotation object)
+      {
+        return createAnnotationAdapter();
+      }
+      @Override
+      public Adapter caseAnnotationArgument(AnnotationArgument object)
+      {
+        return createAnnotationArgumentAdapter();
       }
       @Override
       public Adapter defaultCase(EObject object)
@@ -123,16 +158,121 @@ public class GrabDslAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link springboot.automate.grabDsl.Greeting <em>Greeting</em>}'.
+   * Creates a new adapter for an object of class '{@link springboot.automate.grabDsl.PackageDefinition <em>Package Definition</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
    * it's useful to ignore a case when inheritance will catch all the cases anyway.
    * <!-- end-user-doc -->
    * @return the new adapter.
-   * @see springboot.automate.grabDsl.Greeting
+   * @see springboot.automate.grabDsl.PackageDefinition
    * @generated
    */
-  public Adapter createGreetingAdapter()
+  public Adapter createPackageDefinitionAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link springboot.automate.grabDsl.ClassDefinition <em>Class Definition</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see springboot.automate.grabDsl.ClassDefinition
+   * @generated
+   */
+  public Adapter createClassDefinitionAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link springboot.automate.grabDsl.MemberDefinition <em>Member Definition</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see springboot.automate.grabDsl.MemberDefinition
+   * @generated
+   */
+  public Adapter createMemberDefinitionAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link springboot.automate.grabDsl.MethodDefinition <em>Method Definition</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see springboot.automate.grabDsl.MethodDefinition
+   * @generated
+   */
+  public Adapter createMethodDefinitionAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link springboot.automate.grabDsl.PropertyDefinition <em>Property Definition</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see springboot.automate.grabDsl.PropertyDefinition
+   * @generated
+   */
+  public Adapter createPropertyDefinitionAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link springboot.automate.grabDsl.ParameterDefinition <em>Parameter Definition</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see springboot.automate.grabDsl.ParameterDefinition
+   * @generated
+   */
+  public Adapter createParameterDefinitionAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link springboot.automate.grabDsl.Annotation <em>Annotation</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see springboot.automate.grabDsl.Annotation
+   * @generated
+   */
+  public Adapter createAnnotationAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link springboot.automate.grabDsl.AnnotationArgument <em>Annotation Argument</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see springboot.automate.grabDsl.AnnotationArgument
+   * @generated
+   */
+  public Adapter createAnnotationArgumentAdapter()
   {
     return null;
   }

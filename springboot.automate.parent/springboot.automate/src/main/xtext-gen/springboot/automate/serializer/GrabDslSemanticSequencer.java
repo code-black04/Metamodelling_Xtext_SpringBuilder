@@ -14,9 +14,16 @@ import org.eclipse.xtext.serializer.ISerializationContext;
 import org.eclipse.xtext.serializer.acceptor.SequenceFeeder;
 import org.eclipse.xtext.serializer.sequencer.AbstractDelegatingSemanticSequencer;
 import org.eclipse.xtext.serializer.sequencer.ITransientValueService.ValueTransient;
+import springboot.automate.grabDsl.Annotation;
+import springboot.automate.grabDsl.AnnotationArgument;
+import springboot.automate.grabDsl.ClassDefinition;
 import springboot.automate.grabDsl.GrabDslPackage;
-import springboot.automate.grabDsl.Greeting;
+import springboot.automate.grabDsl.MemberDefinition;
+import springboot.automate.grabDsl.MethodDefinition;
 import springboot.automate.grabDsl.Model;
+import springboot.automate.grabDsl.PackageDefinition;
+import springboot.automate.grabDsl.ParameterDefinition;
+import springboot.automate.grabDsl.PropertyDefinition;
 import springboot.automate.services.GrabDslGrammarAccess;
 
 @SuppressWarnings("all")
@@ -33,11 +40,32 @@ public class GrabDslSemanticSequencer extends AbstractDelegatingSemanticSequence
 		Set<Parameter> parameters = context.getEnabledBooleanParameters();
 		if (epackage == GrabDslPackage.eINSTANCE)
 			switch (semanticObject.eClass().getClassifierID()) {
-			case GrabDslPackage.GREETING:
-				sequence_Greeting(context, (Greeting) semanticObject); 
+			case GrabDslPackage.ANNOTATION:
+				sequence_Annotation(context, (Annotation) semanticObject); 
+				return; 
+			case GrabDslPackage.ANNOTATION_ARGUMENT:
+				sequence_AnnotationArgument(context, (AnnotationArgument) semanticObject); 
+				return; 
+			case GrabDslPackage.CLASS_DEFINITION:
+				sequence_ClassDefinition(context, (ClassDefinition) semanticObject); 
+				return; 
+			case GrabDslPackage.MEMBER_DEFINITION:
+				sequence_MemberDefinition(context, (MemberDefinition) semanticObject); 
+				return; 
+			case GrabDslPackage.METHOD_DEFINITION:
+				sequence_MethodDefinition(context, (MethodDefinition) semanticObject); 
 				return; 
 			case GrabDslPackage.MODEL:
 				sequence_Model(context, (Model) semanticObject); 
+				return; 
+			case GrabDslPackage.PACKAGE_DEFINITION:
+				sequence_PackageDefinition(context, (PackageDefinition) semanticObject); 
+				return; 
+			case GrabDslPackage.PARAMETER_DEFINITION:
+				sequence_ParameterDefinition(context, (ParameterDefinition) semanticObject); 
+				return; 
+			case GrabDslPackage.PROPERTY_DEFINITION:
+				sequence_PropertyDefinition(context, (PropertyDefinition) semanticObject); 
 				return; 
 			}
 		if (errorAcceptor != null)
@@ -47,20 +75,85 @@ public class GrabDslSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * <pre>
 	 * Contexts:
-	 *     Greeting returns Greeting
+	 *     AnnotationArgument returns AnnotationArgument
 	 *
 	 * Constraint:
-	 *     name=ID
+	 *     (name=ID value=STRING)
 	 * </pre>
 	 */
-	protected void sequence_Greeting(ISerializationContext context, Greeting semanticObject) {
+	protected void sequence_AnnotationArgument(ISerializationContext context, AnnotationArgument semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, GrabDslPackage.Literals.GREETING__NAME) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, GrabDslPackage.Literals.GREETING__NAME));
+			if (transientValues.isValueTransient(semanticObject, GrabDslPackage.Literals.ANNOTATION_ARGUMENT__NAME) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, GrabDslPackage.Literals.ANNOTATION_ARGUMENT__NAME));
+			if (transientValues.isValueTransient(semanticObject, GrabDslPackage.Literals.ANNOTATION_ARGUMENT__VALUE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, GrabDslPackage.Literals.ANNOTATION_ARGUMENT__VALUE));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getGreetingAccess().getNameIDTerminalRuleCall_1_0(), semanticObject.getName());
+		feeder.accept(grammarAccess.getAnnotationArgumentAccess().getNameIDTerminalRuleCall_0_0(), semanticObject.getName());
+		feeder.accept(grammarAccess.getAnnotationArgumentAccess().getValueSTRINGTerminalRuleCall_2_0(), semanticObject.getValue());
 		feeder.finish();
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     Annotation returns Annotation
+	 *
+	 * Constraint:
+	 *     (name=ID (arguments+=AnnotationArgument arguments+=AnnotationArgument*)?)
+	 * </pre>
+	 */
+	protected void sequence_Annotation(ISerializationContext context, Annotation semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     ClassDefinition returns ClassDefinition
+	 *
+	 * Constraint:
+	 *     (annotations+=Annotation* name=ID members+=MemberDefinition*)
+	 * </pre>
+	 */
+	protected void sequence_ClassDefinition(ISerializationContext context, ClassDefinition semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     MemberDefinition returns MemberDefinition
+	 *
+	 * Constraint:
+	 *     (annotations+=Annotation* (method=MethodDefinition | property=PropertyDefinition))
+	 * </pre>
+	 */
+	protected void sequence_MemberDefinition(ISerializationContext context, MemberDefinition semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     MethodDefinition returns MethodDefinition
+	 *
+	 * Constraint:
+	 *     (
+	 *         annotations+=Annotation* 
+	 *         visibility=VisibilityModifier? 
+	 *         name=ID 
+	 *         (parameters+=ParameterDefinition parameters+=ParameterDefinition*)? 
+	 *         returnType=Type
+	 *     )
+	 * </pre>
+	 */
+	protected void sequence_MethodDefinition(ISerializationContext context, MethodDefinition semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -70,10 +163,52 @@ public class GrabDslSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     Model returns Model
 	 *
 	 * Constraint:
-	 *     greetings+=Greeting+
+	 *     (packageName=QualifiedName packages+=PackageDefinition*)
 	 * </pre>
 	 */
 	protected void sequence_Model(ISerializationContext context, Model semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     PackageDefinition returns PackageDefinition
+	 *
+	 * Constraint:
+	 *     (annotations+=Annotation* packageName=QualifiedName classes+=ClassDefinition*)
+	 * </pre>
+	 */
+	protected void sequence_PackageDefinition(ISerializationContext context, PackageDefinition semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     ParameterDefinition returns ParameterDefinition
+	 *
+	 * Constraint:
+	 *     (name=ID type=Type defaultValue=STRING?)
+	 * </pre>
+	 */
+	protected void sequence_ParameterDefinition(ISerializationContext context, ParameterDefinition semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     PropertyDefinition returns PropertyDefinition
+	 *
+	 * Constraint:
+	 *     (annotations+=Annotation* visibility=VisibilityModifier? name=ID type=Type defaultValue=STRING?)
+	 * </pre>
+	 */
+	protected void sequence_PropertyDefinition(ISerializationContext context, PropertyDefinition semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

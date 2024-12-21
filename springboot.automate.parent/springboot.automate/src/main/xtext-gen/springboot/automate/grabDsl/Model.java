@@ -16,7 +16,8 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link springboot.automate.grabDsl.Model#getGreetings <em>Greetings</em>}</li>
+ *   <li>{@link springboot.automate.grabDsl.Model#getPackageName <em>Package Name</em>}</li>
+ *   <li>{@link springboot.automate.grabDsl.Model#getPackages <em>Packages</em>}</li>
  * </ul>
  *
  * @see springboot.automate.grabDsl.GrabDslPackage#getModel()
@@ -26,15 +27,37 @@ import org.eclipse.emf.ecore.EObject;
 public interface Model extends EObject
 {
   /**
-   * Returns the value of the '<em><b>Greetings</b></em>' containment reference list.
-   * The list contents are of type {@link springboot.automate.grabDsl.Greeting}.
+   * Returns the value of the '<em><b>Package Name</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Greetings</em>' containment reference list.
-   * @see springboot.automate.grabDsl.GrabDslPackage#getModel_Greetings()
+   * @return the value of the '<em>Package Name</em>' attribute.
+   * @see #setPackageName(String)
+   * @see springboot.automate.grabDsl.GrabDslPackage#getModel_PackageName()
+   * @model
+   * @generated
+   */
+  String getPackageName();
+
+  /**
+   * Sets the value of the '{@link springboot.automate.grabDsl.Model#getPackageName <em>Package Name</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Package Name</em>' attribute.
+   * @see #getPackageName()
+   * @generated
+   */
+  void setPackageName(String value);
+
+  /**
+   * Returns the value of the '<em><b>Packages</b></em>' containment reference list.
+   * The list contents are of type {@link springboot.automate.grabDsl.PackageDefinition}.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Packages</em>' containment reference list.
+   * @see springboot.automate.grabDsl.GrabDslPackage#getModel_Packages()
    * @model containment="true"
    * @generated
    */
-  EList<Greeting> getGreetings();
+  EList<PackageDefinition> getPackages();
 
 } // Model

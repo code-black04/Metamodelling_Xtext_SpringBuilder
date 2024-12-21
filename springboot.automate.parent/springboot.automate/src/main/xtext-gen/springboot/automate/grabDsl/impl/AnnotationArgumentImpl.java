@@ -10,23 +10,24 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
+import springboot.automate.grabDsl.AnnotationArgument;
 import springboot.automate.grabDsl.GrabDslPackage;
-import springboot.automate.grabDsl.Greeting;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Greeting</b></em>'.
+ * An implementation of the model object '<em><b>Annotation Argument</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link springboot.automate.grabDsl.impl.GreetingImpl#getName <em>Name</em>}</li>
+ *   <li>{@link springboot.automate.grabDsl.impl.AnnotationArgumentImpl#getName <em>Name</em>}</li>
+ *   <li>{@link springboot.automate.grabDsl.impl.AnnotationArgumentImpl#getValue <em>Value</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class GreetingImpl extends MinimalEObjectImpl.Container implements Greeting
+public class AnnotationArgumentImpl extends MinimalEObjectImpl.Container implements AnnotationArgument
 {
   /**
    * The default value of the '{@link #getName() <em>Name</em>}' attribute.
@@ -49,11 +50,31 @@ public class GreetingImpl extends MinimalEObjectImpl.Container implements Greeti
   protected String name = NAME_EDEFAULT;
 
   /**
+   * The default value of the '{@link #getValue() <em>Value</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getValue()
+   * @generated
+   * @ordered
+   */
+  protected static final String VALUE_EDEFAULT = null;
+
+  /**
+   * The cached value of the '{@link #getValue() <em>Value</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getValue()
+   * @generated
+   * @ordered
+   */
+  protected String value = VALUE_EDEFAULT;
+
+  /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  protected GreetingImpl()
+  protected AnnotationArgumentImpl()
   {
     super();
   }
@@ -66,7 +87,7 @@ public class GreetingImpl extends MinimalEObjectImpl.Container implements Greeti
   @Override
   protected EClass eStaticClass()
   {
-    return GrabDslPackage.Literals.GREETING;
+    return GrabDslPackage.Literals.ANNOTATION_ARGUMENT;
   }
 
   /**
@@ -91,7 +112,32 @@ public class GreetingImpl extends MinimalEObjectImpl.Container implements Greeti
     String oldName = name;
     name = newName;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, GrabDslPackage.GREETING__NAME, oldName, name));
+      eNotify(new ENotificationImpl(this, Notification.SET, GrabDslPackage.ANNOTATION_ARGUMENT__NAME, oldName, name));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public String getValue()
+  {
+    return value;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public void setValue(String newValue)
+  {
+    String oldValue = value;
+    value = newValue;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, GrabDslPackage.ANNOTATION_ARGUMENT__VALUE, oldValue, value));
   }
 
   /**
@@ -104,8 +150,10 @@ public class GreetingImpl extends MinimalEObjectImpl.Container implements Greeti
   {
     switch (featureID)
     {
-      case GrabDslPackage.GREETING__NAME:
+      case GrabDslPackage.ANNOTATION_ARGUMENT__NAME:
         return getName();
+      case GrabDslPackage.ANNOTATION_ARGUMENT__VALUE:
+        return getValue();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -120,8 +168,11 @@ public class GreetingImpl extends MinimalEObjectImpl.Container implements Greeti
   {
     switch (featureID)
     {
-      case GrabDslPackage.GREETING__NAME:
+      case GrabDslPackage.ANNOTATION_ARGUMENT__NAME:
         setName((String)newValue);
+        return;
+      case GrabDslPackage.ANNOTATION_ARGUMENT__VALUE:
+        setValue((String)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -137,8 +188,11 @@ public class GreetingImpl extends MinimalEObjectImpl.Container implements Greeti
   {
     switch (featureID)
     {
-      case GrabDslPackage.GREETING__NAME:
+      case GrabDslPackage.ANNOTATION_ARGUMENT__NAME:
         setName(NAME_EDEFAULT);
+        return;
+      case GrabDslPackage.ANNOTATION_ARGUMENT__VALUE:
+        setValue(VALUE_EDEFAULT);
         return;
     }
     super.eUnset(featureID);
@@ -154,8 +208,10 @@ public class GreetingImpl extends MinimalEObjectImpl.Container implements Greeti
   {
     switch (featureID)
     {
-      case GrabDslPackage.GREETING__NAME:
+      case GrabDslPackage.ANNOTATION_ARGUMENT__NAME:
         return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+      case GrabDslPackage.ANNOTATION_ARGUMENT__VALUE:
+        return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT.equals(value);
     }
     return super.eIsSet(featureID);
   }
@@ -173,8 +229,10 @@ public class GreetingImpl extends MinimalEObjectImpl.Container implements Greeti
     StringBuilder result = new StringBuilder(super.toString());
     result.append(" (name: ");
     result.append(name);
+    result.append(", value: ");
+    result.append(value);
     result.append(')');
     return result.toString();
   }
 
-} //GreetingImpl
+} //AnnotationArgumentImpl

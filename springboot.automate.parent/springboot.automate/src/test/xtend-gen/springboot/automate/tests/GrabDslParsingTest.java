@@ -25,6 +25,7 @@ public class GrabDslParsingTest {
   private ParseHelper<Model> parseHelper;
 
   @Test
+  @Deprecated
   public void loadModel() {
     try {
       StringConcatenation _builder = new StringConcatenation();

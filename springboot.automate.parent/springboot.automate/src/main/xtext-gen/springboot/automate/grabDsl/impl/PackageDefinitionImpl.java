@@ -19,26 +19,38 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import springboot.automate.grabDsl.Annotation;
+import springboot.automate.grabDsl.ClassDefinition;
 import springboot.automate.grabDsl.GrabDslPackage;
-import springboot.automate.grabDsl.Model;
 import springboot.automate.grabDsl.PackageDefinition;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Model</b></em>'.
+ * An implementation of the model object '<em><b>Package Definition</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link springboot.automate.grabDsl.impl.ModelImpl#getPackageName <em>Package Name</em>}</li>
- *   <li>{@link springboot.automate.grabDsl.impl.ModelImpl#getPackages <em>Packages</em>}</li>
+ *   <li>{@link springboot.automate.grabDsl.impl.PackageDefinitionImpl#getAnnotations <em>Annotations</em>}</li>
+ *   <li>{@link springboot.automate.grabDsl.impl.PackageDefinitionImpl#getPackageName <em>Package Name</em>}</li>
+ *   <li>{@link springboot.automate.grabDsl.impl.PackageDefinitionImpl#getClasses <em>Classes</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class ModelImpl extends MinimalEObjectImpl.Container implements Model
+public class PackageDefinitionImpl extends MinimalEObjectImpl.Container implements PackageDefinition
 {
+  /**
+   * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getAnnotations()
+   * @generated
+   * @ordered
+   */
+  protected EList<Annotation> annotations;
+
   /**
    * The default value of the '{@link #getPackageName() <em>Package Name</em>}' attribute.
    * <!-- begin-user-doc -->
@@ -60,21 +72,21 @@ public class ModelImpl extends MinimalEObjectImpl.Container implements Model
   protected String packageName = PACKAGE_NAME_EDEFAULT;
 
   /**
-   * The cached value of the '{@link #getPackages() <em>Packages</em>}' containment reference list.
+   * The cached value of the '{@link #getClasses() <em>Classes</em>}' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getPackages()
+   * @see #getClasses()
    * @generated
    * @ordered
    */
-  protected EList<PackageDefinition> packages;
+  protected EList<ClassDefinition> classes;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  protected ModelImpl()
+  protected PackageDefinitionImpl()
   {
     super();
   }
@@ -87,7 +99,22 @@ public class ModelImpl extends MinimalEObjectImpl.Container implements Model
   @Override
   protected EClass eStaticClass()
   {
-    return GrabDslPackage.Literals.MODEL;
+    return GrabDslPackage.Literals.PACKAGE_DEFINITION;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EList<Annotation> getAnnotations()
+  {
+    if (annotations == null)
+    {
+      annotations = new EObjectContainmentEList<Annotation>(Annotation.class, this, GrabDslPackage.PACKAGE_DEFINITION__ANNOTATIONS);
+    }
+    return annotations;
   }
 
   /**
@@ -112,7 +139,7 @@ public class ModelImpl extends MinimalEObjectImpl.Container implements Model
     String oldPackageName = packageName;
     packageName = newPackageName;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, GrabDslPackage.MODEL__PACKAGE_NAME, oldPackageName, packageName));
+      eNotify(new ENotificationImpl(this, Notification.SET, GrabDslPackage.PACKAGE_DEFINITION__PACKAGE_NAME, oldPackageName, packageName));
   }
 
   /**
@@ -121,13 +148,13 @@ public class ModelImpl extends MinimalEObjectImpl.Container implements Model
    * @generated
    */
   @Override
-  public EList<PackageDefinition> getPackages()
+  public EList<ClassDefinition> getClasses()
   {
-    if (packages == null)
+    if (classes == null)
     {
-      packages = new EObjectContainmentEList<PackageDefinition>(PackageDefinition.class, this, GrabDslPackage.MODEL__PACKAGES);
+      classes = new EObjectContainmentEList<ClassDefinition>(ClassDefinition.class, this, GrabDslPackage.PACKAGE_DEFINITION__CLASSES);
     }
-    return packages;
+    return classes;
   }
 
   /**
@@ -140,8 +167,10 @@ public class ModelImpl extends MinimalEObjectImpl.Container implements Model
   {
     switch (featureID)
     {
-      case GrabDslPackage.MODEL__PACKAGES:
-        return ((InternalEList<?>)getPackages()).basicRemove(otherEnd, msgs);
+      case GrabDslPackage.PACKAGE_DEFINITION__ANNOTATIONS:
+        return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
+      case GrabDslPackage.PACKAGE_DEFINITION__CLASSES:
+        return ((InternalEList<?>)getClasses()).basicRemove(otherEnd, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
   }
@@ -156,10 +185,12 @@ public class ModelImpl extends MinimalEObjectImpl.Container implements Model
   {
     switch (featureID)
     {
-      case GrabDslPackage.MODEL__PACKAGE_NAME:
+      case GrabDslPackage.PACKAGE_DEFINITION__ANNOTATIONS:
+        return getAnnotations();
+      case GrabDslPackage.PACKAGE_DEFINITION__PACKAGE_NAME:
         return getPackageName();
-      case GrabDslPackage.MODEL__PACKAGES:
-        return getPackages();
+      case GrabDslPackage.PACKAGE_DEFINITION__CLASSES:
+        return getClasses();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -175,12 +206,16 @@ public class ModelImpl extends MinimalEObjectImpl.Container implements Model
   {
     switch (featureID)
     {
-      case GrabDslPackage.MODEL__PACKAGE_NAME:
+      case GrabDslPackage.PACKAGE_DEFINITION__ANNOTATIONS:
+        getAnnotations().clear();
+        getAnnotations().addAll((Collection<? extends Annotation>)newValue);
+        return;
+      case GrabDslPackage.PACKAGE_DEFINITION__PACKAGE_NAME:
         setPackageName((String)newValue);
         return;
-      case GrabDslPackage.MODEL__PACKAGES:
-        getPackages().clear();
-        getPackages().addAll((Collection<? extends PackageDefinition>)newValue);
+      case GrabDslPackage.PACKAGE_DEFINITION__CLASSES:
+        getClasses().clear();
+        getClasses().addAll((Collection<? extends ClassDefinition>)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -196,11 +231,14 @@ public class ModelImpl extends MinimalEObjectImpl.Container implements Model
   {
     switch (featureID)
     {
-      case GrabDslPackage.MODEL__PACKAGE_NAME:
+      case GrabDslPackage.PACKAGE_DEFINITION__ANNOTATIONS:
+        getAnnotations().clear();
+        return;
+      case GrabDslPackage.PACKAGE_DEFINITION__PACKAGE_NAME:
         setPackageName(PACKAGE_NAME_EDEFAULT);
         return;
-      case GrabDslPackage.MODEL__PACKAGES:
-        getPackages().clear();
+      case GrabDslPackage.PACKAGE_DEFINITION__CLASSES:
+        getClasses().clear();
         return;
     }
     super.eUnset(featureID);
@@ -216,10 +254,12 @@ public class ModelImpl extends MinimalEObjectImpl.Container implements Model
   {
     switch (featureID)
     {
-      case GrabDslPackage.MODEL__PACKAGE_NAME:
+      case GrabDslPackage.PACKAGE_DEFINITION__ANNOTATIONS:
+        return annotations != null && !annotations.isEmpty();
+      case GrabDslPackage.PACKAGE_DEFINITION__PACKAGE_NAME:
         return PACKAGE_NAME_EDEFAULT == null ? packageName != null : !PACKAGE_NAME_EDEFAULT.equals(packageName);
-      case GrabDslPackage.MODEL__PACKAGES:
-        return packages != null && !packages.isEmpty();
+      case GrabDslPackage.PACKAGE_DEFINITION__CLASSES:
+        return classes != null && !classes.isEmpty();
     }
     return super.eIsSet(featureID);
   }
@@ -241,4 +281,4 @@ public class ModelImpl extends MinimalEObjectImpl.Container implements Model
     return result.toString();
   }
 
-} //ModelImpl
+} //PackageDefinitionImpl

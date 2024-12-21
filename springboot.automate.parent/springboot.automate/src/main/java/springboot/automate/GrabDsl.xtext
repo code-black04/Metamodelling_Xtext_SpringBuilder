@@ -2,8 +2,61 @@ grammar springboot.automate.GrabDsl with org.eclipse.xtext.common.Terminals
 
 generate grabDsl "http://www.automate.springboot/GrabDsl"
 
+// Entry point for the grammar
 Model:
-	greetings+=Greeting*;
-	
-Greeting:
-	'Hello' name=ID '!';
+    'package' packageName=QualifiedName '{'
+        packages+=PackageDefinition*
+    '}';
+
+PackageDefinition:
+	annotations+=Annotation*
+    'package' packageName=QualifiedName '{'
+        classes+=ClassDefinition*
+    '}';
+
+ClassDefinition:
+    annotations+=Annotation*
+    'class' name=ID '{'
+        members+=MemberDefinition*
+    '}';
+
+MemberDefinition:
+    annotations+=Annotation*
+    (method=MethodDefinition | property=PropertyDefinition);
+
+MethodDefinition:
+	annotations+=Annotation*
+    visibility=VisibilityModifier? // Optional visibility
+    name=ID '('
+        (parameters+=ParameterDefinition (',' parameters+=ParameterDefinition)*)? // Parameter list
+    ')'
+    ':' returnType=Type ';'; // Return type
+
+PropertyDefinition:
+	annotations+=Annotation*
+    visibility=VisibilityModifier? // Optional visibility
+    name=ID ':' type=Type ('=' defaultValue=STRING)?; // Property type
+
+ParameterDefinition:
+    name=ID ':' type=Type ('=' defaultValue=STRING)?;// Parameter name and type
+
+Annotation:
+    '@' name=ID ('(' (arguments+=AnnotationArgument (',' arguments+=AnnotationArgument)*)? ')')?;
+
+AnnotationArgument:
+    name=ID '=' value=STRING; // Annotation argument as key-value pairs
+
+VisibilityModifier:
+    'public' | 'private' | 'protected'; // Direct keywords
+
+Type:
+    PrimitiveType | QualifiedName | GenericType; // Types can be primitive or qualified names
+
+PrimitiveType:
+    'void' | 'String' | 'UUID' | 'Date' | 'Timestamp' | 'List';
+
+QualifiedName:
+    ID ('.' ID)*; // Fully qualified names (e.g., com.example)
+
+GenericType:
+    QualifiedName '<' Type '>';

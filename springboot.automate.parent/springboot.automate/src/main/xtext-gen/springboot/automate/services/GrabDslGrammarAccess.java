@@ -6,6 +6,7 @@ package springboot.automate.services;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import java.util.List;
+import org.eclipse.xtext.Alternatives;
 import org.eclipse.xtext.Assignment;
 import org.eclipse.xtext.Grammar;
 import org.eclipse.xtext.GrammarUtil;
@@ -23,36 +24,438 @@ public class GrabDslGrammarAccess extends AbstractElementFinder.AbstractGrammarE
 	
 	public class ModelElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "springboot.automate.GrabDsl.Model");
-		private final Assignment cGreetingsAssignment = (Assignment)rule.eContents().get(1);
-		private final RuleCall cGreetingsGreetingParserRuleCall_0 = (RuleCall)cGreetingsAssignment.eContents().get(0);
-		
-		//Model:
-		//    greetings+=Greeting*;
-		@Override public ParserRule getRule() { return rule; }
-		
-		//greetings+=Greeting*
-		public Assignment getGreetingsAssignment() { return cGreetingsAssignment; }
-		
-		//Greeting
-		public RuleCall getGreetingsGreetingParserRuleCall_0() { return cGreetingsGreetingParserRuleCall_0; }
-	}
-	public class GreetingElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "springboot.automate.GrabDsl.Greeting");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Keyword cHelloKeyword_0 = (Keyword)cGroup.eContents().get(0);
-		private final Assignment cNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cNameIDTerminalRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
-		private final Keyword cExclamationMarkKeyword_2 = (Keyword)cGroup.eContents().get(2);
+		private final Keyword cPackageKeyword_0 = (Keyword)cGroup.eContents().get(0);
+		private final Assignment cPackageNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cPackageNameQualifiedNameParserRuleCall_1_0 = (RuleCall)cPackageNameAssignment_1.eContents().get(0);
+		private final Keyword cLeftCurlyBracketKeyword_2 = (Keyword)cGroup.eContents().get(2);
+		private final Assignment cPackagesAssignment_3 = (Assignment)cGroup.eContents().get(3);
+		private final RuleCall cPackagesPackageDefinitionParserRuleCall_3_0 = (RuleCall)cPackagesAssignment_3.eContents().get(0);
+		private final Keyword cRightCurlyBracketKeyword_4 = (Keyword)cGroup.eContents().get(4);
 		
-		//Greeting:
-		//    'Hello' name=ID '!';
+		//// Entry point for the grammar
+		//Model:
+		//    'package' packageName=QualifiedName '{'
+		//        packages+=PackageDefinition*
+		//    '}';
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'Hello' name=ID '!'
+		//'package' packageName=QualifiedName '{'
+		//    packages+=PackageDefinition*
+		//'}'
 		public Group getGroup() { return cGroup; }
 		
-		//'Hello'
-		public Keyword getHelloKeyword_0() { return cHelloKeyword_0; }
+		//'package'
+		public Keyword getPackageKeyword_0() { return cPackageKeyword_0; }
+		
+		//packageName=QualifiedName
+		public Assignment getPackageNameAssignment_1() { return cPackageNameAssignment_1; }
+		
+		//QualifiedName
+		public RuleCall getPackageNameQualifiedNameParserRuleCall_1_0() { return cPackageNameQualifiedNameParserRuleCall_1_0; }
+		
+		//'{'
+		public Keyword getLeftCurlyBracketKeyword_2() { return cLeftCurlyBracketKeyword_2; }
+		
+		//packages+=PackageDefinition*
+		public Assignment getPackagesAssignment_3() { return cPackagesAssignment_3; }
+		
+		//PackageDefinition
+		public RuleCall getPackagesPackageDefinitionParserRuleCall_3_0() { return cPackagesPackageDefinitionParserRuleCall_3_0; }
+		
+		//'}'
+		public Keyword getRightCurlyBracketKeyword_4() { return cRightCurlyBracketKeyword_4; }
+	}
+	public class PackageDefinitionElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "springboot.automate.GrabDsl.PackageDefinition");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Assignment cAnnotationsAssignment_0 = (Assignment)cGroup.eContents().get(0);
+		private final RuleCall cAnnotationsAnnotationParserRuleCall_0_0 = (RuleCall)cAnnotationsAssignment_0.eContents().get(0);
+		private final Keyword cPackageKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		private final Assignment cPackageNameAssignment_2 = (Assignment)cGroup.eContents().get(2);
+		private final RuleCall cPackageNameQualifiedNameParserRuleCall_2_0 = (RuleCall)cPackageNameAssignment_2.eContents().get(0);
+		private final Keyword cLeftCurlyBracketKeyword_3 = (Keyword)cGroup.eContents().get(3);
+		private final Assignment cClassesAssignment_4 = (Assignment)cGroup.eContents().get(4);
+		private final RuleCall cClassesClassDefinitionParserRuleCall_4_0 = (RuleCall)cClassesAssignment_4.eContents().get(0);
+		private final Keyword cRightCurlyBracketKeyword_5 = (Keyword)cGroup.eContents().get(5);
+		
+		//PackageDefinition:
+		//    annotations+=Annotation*
+		//    'package' packageName=QualifiedName '{'
+		//        classes+=ClassDefinition*
+		//    '}';
+		@Override public ParserRule getRule() { return rule; }
+		
+		//annotations+=Annotation*
+		//'package' packageName=QualifiedName '{'
+		//    classes+=ClassDefinition*
+		//'}'
+		public Group getGroup() { return cGroup; }
+		
+		//annotations+=Annotation*
+		public Assignment getAnnotationsAssignment_0() { return cAnnotationsAssignment_0; }
+		
+		//Annotation
+		public RuleCall getAnnotationsAnnotationParserRuleCall_0_0() { return cAnnotationsAnnotationParserRuleCall_0_0; }
+		
+		//'package'
+		public Keyword getPackageKeyword_1() { return cPackageKeyword_1; }
+		
+		//packageName=QualifiedName
+		public Assignment getPackageNameAssignment_2() { return cPackageNameAssignment_2; }
+		
+		//QualifiedName
+		public RuleCall getPackageNameQualifiedNameParserRuleCall_2_0() { return cPackageNameQualifiedNameParserRuleCall_2_0; }
+		
+		//'{'
+		public Keyword getLeftCurlyBracketKeyword_3() { return cLeftCurlyBracketKeyword_3; }
+		
+		//classes+=ClassDefinition*
+		public Assignment getClassesAssignment_4() { return cClassesAssignment_4; }
+		
+		//ClassDefinition
+		public RuleCall getClassesClassDefinitionParserRuleCall_4_0() { return cClassesClassDefinitionParserRuleCall_4_0; }
+		
+		//'}'
+		public Keyword getRightCurlyBracketKeyword_5() { return cRightCurlyBracketKeyword_5; }
+	}
+	public class ClassDefinitionElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "springboot.automate.GrabDsl.ClassDefinition");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Assignment cAnnotationsAssignment_0 = (Assignment)cGroup.eContents().get(0);
+		private final RuleCall cAnnotationsAnnotationParserRuleCall_0_0 = (RuleCall)cAnnotationsAssignment_0.eContents().get(0);
+		private final Keyword cClassKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		private final Assignment cNameAssignment_2 = (Assignment)cGroup.eContents().get(2);
+		private final RuleCall cNameIDTerminalRuleCall_2_0 = (RuleCall)cNameAssignment_2.eContents().get(0);
+		private final Keyword cLeftCurlyBracketKeyword_3 = (Keyword)cGroup.eContents().get(3);
+		private final Assignment cMembersAssignment_4 = (Assignment)cGroup.eContents().get(4);
+		private final RuleCall cMembersMemberDefinitionParserRuleCall_4_0 = (RuleCall)cMembersAssignment_4.eContents().get(0);
+		private final Keyword cRightCurlyBracketKeyword_5 = (Keyword)cGroup.eContents().get(5);
+		
+		//ClassDefinition:
+		//    annotations+=Annotation*
+		//    'class' name=ID '{'
+		//        members+=MemberDefinition*
+		//    '}';
+		@Override public ParserRule getRule() { return rule; }
+		
+		//annotations+=Annotation*
+		//'class' name=ID '{'
+		//    members+=MemberDefinition*
+		//'}'
+		public Group getGroup() { return cGroup; }
+		
+		//annotations+=Annotation*
+		public Assignment getAnnotationsAssignment_0() { return cAnnotationsAssignment_0; }
+		
+		//Annotation
+		public RuleCall getAnnotationsAnnotationParserRuleCall_0_0() { return cAnnotationsAnnotationParserRuleCall_0_0; }
+		
+		//'class'
+		public Keyword getClassKeyword_1() { return cClassKeyword_1; }
+		
+		//name=ID
+		public Assignment getNameAssignment_2() { return cNameAssignment_2; }
+		
+		//ID
+		public RuleCall getNameIDTerminalRuleCall_2_0() { return cNameIDTerminalRuleCall_2_0; }
+		
+		//'{'
+		public Keyword getLeftCurlyBracketKeyword_3() { return cLeftCurlyBracketKeyword_3; }
+		
+		//members+=MemberDefinition*
+		public Assignment getMembersAssignment_4() { return cMembersAssignment_4; }
+		
+		//MemberDefinition
+		public RuleCall getMembersMemberDefinitionParserRuleCall_4_0() { return cMembersMemberDefinitionParserRuleCall_4_0; }
+		
+		//'}'
+		public Keyword getRightCurlyBracketKeyword_5() { return cRightCurlyBracketKeyword_5; }
+	}
+	public class MemberDefinitionElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "springboot.automate.GrabDsl.MemberDefinition");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Assignment cAnnotationsAssignment_0 = (Assignment)cGroup.eContents().get(0);
+		private final RuleCall cAnnotationsAnnotationParserRuleCall_0_0 = (RuleCall)cAnnotationsAssignment_0.eContents().get(0);
+		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
+		private final Assignment cMethodAssignment_1_0 = (Assignment)cAlternatives_1.eContents().get(0);
+		private final RuleCall cMethodMethodDefinitionParserRuleCall_1_0_0 = (RuleCall)cMethodAssignment_1_0.eContents().get(0);
+		private final Assignment cPropertyAssignment_1_1 = (Assignment)cAlternatives_1.eContents().get(1);
+		private final RuleCall cPropertyPropertyDefinitionParserRuleCall_1_1_0 = (RuleCall)cPropertyAssignment_1_1.eContents().get(0);
+		
+		//MemberDefinition:
+		//    annotations+=Annotation*
+		//    (method=MethodDefinition | property=PropertyDefinition);
+		@Override public ParserRule getRule() { return rule; }
+		
+		//annotations+=Annotation*
+		//(method=MethodDefinition | property=PropertyDefinition)
+		public Group getGroup() { return cGroup; }
+		
+		//annotations+=Annotation*
+		public Assignment getAnnotationsAssignment_0() { return cAnnotationsAssignment_0; }
+		
+		//Annotation
+		public RuleCall getAnnotationsAnnotationParserRuleCall_0_0() { return cAnnotationsAnnotationParserRuleCall_0_0; }
+		
+		//(method=MethodDefinition | property=PropertyDefinition)
+		public Alternatives getAlternatives_1() { return cAlternatives_1; }
+		
+		//method=MethodDefinition
+		public Assignment getMethodAssignment_1_0() { return cMethodAssignment_1_0; }
+		
+		//MethodDefinition
+		public RuleCall getMethodMethodDefinitionParserRuleCall_1_0_0() { return cMethodMethodDefinitionParserRuleCall_1_0_0; }
+		
+		//property=PropertyDefinition
+		public Assignment getPropertyAssignment_1_1() { return cPropertyAssignment_1_1; }
+		
+		//PropertyDefinition
+		public RuleCall getPropertyPropertyDefinitionParserRuleCall_1_1_0() { return cPropertyPropertyDefinitionParserRuleCall_1_1_0; }
+	}
+	public class MethodDefinitionElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "springboot.automate.GrabDsl.MethodDefinition");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Assignment cAnnotationsAssignment_0 = (Assignment)cGroup.eContents().get(0);
+		private final RuleCall cAnnotationsAnnotationParserRuleCall_0_0 = (RuleCall)cAnnotationsAssignment_0.eContents().get(0);
+		private final Assignment cVisibilityAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cVisibilityVisibilityModifierParserRuleCall_1_0 = (RuleCall)cVisibilityAssignment_1.eContents().get(0);
+		private final Assignment cNameAssignment_2 = (Assignment)cGroup.eContents().get(2);
+		private final RuleCall cNameIDTerminalRuleCall_2_0 = (RuleCall)cNameAssignment_2.eContents().get(0);
+		private final Keyword cLeftParenthesisKeyword_3 = (Keyword)cGroup.eContents().get(3);
+		private final Group cGroup_4 = (Group)cGroup.eContents().get(4);
+		private final Assignment cParametersAssignment_4_0 = (Assignment)cGroup_4.eContents().get(0);
+		private final RuleCall cParametersParameterDefinitionParserRuleCall_4_0_0 = (RuleCall)cParametersAssignment_4_0.eContents().get(0);
+		private final Group cGroup_4_1 = (Group)cGroup_4.eContents().get(1);
+		private final Keyword cCommaKeyword_4_1_0 = (Keyword)cGroup_4_1.eContents().get(0);
+		private final Assignment cParametersAssignment_4_1_1 = (Assignment)cGroup_4_1.eContents().get(1);
+		private final RuleCall cParametersParameterDefinitionParserRuleCall_4_1_1_0 = (RuleCall)cParametersAssignment_4_1_1.eContents().get(0);
+		private final Keyword cRightParenthesisKeyword_5 = (Keyword)cGroup.eContents().get(5);
+		private final Keyword cColonKeyword_6 = (Keyword)cGroup.eContents().get(6);
+		private final Assignment cReturnTypeAssignment_7 = (Assignment)cGroup.eContents().get(7);
+		private final RuleCall cReturnTypeTypeParserRuleCall_7_0 = (RuleCall)cReturnTypeAssignment_7.eContents().get(0);
+		private final Keyword cSemicolonKeyword_8 = (Keyword)cGroup.eContents().get(8);
+		
+		//MethodDefinition:
+		//    annotations+=Annotation*
+		//    visibility=VisibilityModifier? // Optional visibility
+		//    name=ID '('
+		//        (parameters+=ParameterDefinition (',' parameters+=ParameterDefinition)*)? // Parameter list
+		//    ')'
+		//    ':' returnType=Type ';';
+		@Override public ParserRule getRule() { return rule; }
+		
+		//annotations+=Annotation*
+		//visibility=VisibilityModifier? // Optional visibility
+		//name=ID '('
+		//    (parameters+=ParameterDefinition (',' parameters+=ParameterDefinition)*)? // Parameter list
+		//')'
+		//':' returnType=Type ';'
+		public Group getGroup() { return cGroup; }
+		
+		//annotations+=Annotation*
+		public Assignment getAnnotationsAssignment_0() { return cAnnotationsAssignment_0; }
+		
+		//Annotation
+		public RuleCall getAnnotationsAnnotationParserRuleCall_0_0() { return cAnnotationsAnnotationParserRuleCall_0_0; }
+		
+		//visibility=VisibilityModifier?
+		public Assignment getVisibilityAssignment_1() { return cVisibilityAssignment_1; }
+		
+		//VisibilityModifier
+		public RuleCall getVisibilityVisibilityModifierParserRuleCall_1_0() { return cVisibilityVisibilityModifierParserRuleCall_1_0; }
+		
+		//// Optional visibility
+		//   name=ID
+		public Assignment getNameAssignment_2() { return cNameAssignment_2; }
+		
+		//ID
+		public RuleCall getNameIDTerminalRuleCall_2_0() { return cNameIDTerminalRuleCall_2_0; }
+		
+		//'('
+		public Keyword getLeftParenthesisKeyword_3() { return cLeftParenthesisKeyword_3; }
+		
+		//(parameters+=ParameterDefinition (',' parameters+=ParameterDefinition)*)?
+		public Group getGroup_4() { return cGroup_4; }
+		
+		//parameters+=ParameterDefinition
+		public Assignment getParametersAssignment_4_0() { return cParametersAssignment_4_0; }
+		
+		//ParameterDefinition
+		public RuleCall getParametersParameterDefinitionParserRuleCall_4_0_0() { return cParametersParameterDefinitionParserRuleCall_4_0_0; }
+		
+		//(',' parameters+=ParameterDefinition)*
+		public Group getGroup_4_1() { return cGroup_4_1; }
+		
+		//','
+		public Keyword getCommaKeyword_4_1_0() { return cCommaKeyword_4_1_0; }
+		
+		//parameters+=ParameterDefinition
+		public Assignment getParametersAssignment_4_1_1() { return cParametersAssignment_4_1_1; }
+		
+		//ParameterDefinition
+		public RuleCall getParametersParameterDefinitionParserRuleCall_4_1_1_0() { return cParametersParameterDefinitionParserRuleCall_4_1_1_0; }
+		
+		//// Parameter list
+		//   ')'
+		public Keyword getRightParenthesisKeyword_5() { return cRightParenthesisKeyword_5; }
+		
+		//':'
+		public Keyword getColonKeyword_6() { return cColonKeyword_6; }
+		
+		//returnType=Type
+		public Assignment getReturnTypeAssignment_7() { return cReturnTypeAssignment_7; }
+		
+		//Type
+		public RuleCall getReturnTypeTypeParserRuleCall_7_0() { return cReturnTypeTypeParserRuleCall_7_0; }
+		
+		//';'
+		public Keyword getSemicolonKeyword_8() { return cSemicolonKeyword_8; }
+	}
+	public class PropertyDefinitionElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "springboot.automate.GrabDsl.PropertyDefinition");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Assignment cAnnotationsAssignment_0 = (Assignment)cGroup.eContents().get(0);
+		private final RuleCall cAnnotationsAnnotationParserRuleCall_0_0 = (RuleCall)cAnnotationsAssignment_0.eContents().get(0);
+		private final Assignment cVisibilityAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cVisibilityVisibilityModifierParserRuleCall_1_0 = (RuleCall)cVisibilityAssignment_1.eContents().get(0);
+		private final Assignment cNameAssignment_2 = (Assignment)cGroup.eContents().get(2);
+		private final RuleCall cNameIDTerminalRuleCall_2_0 = (RuleCall)cNameAssignment_2.eContents().get(0);
+		private final Keyword cColonKeyword_3 = (Keyword)cGroup.eContents().get(3);
+		private final Assignment cTypeAssignment_4 = (Assignment)cGroup.eContents().get(4);
+		private final RuleCall cTypeTypeParserRuleCall_4_0 = (RuleCall)cTypeAssignment_4.eContents().get(0);
+		private final Group cGroup_5 = (Group)cGroup.eContents().get(5);
+		private final Keyword cEqualsSignKeyword_5_0 = (Keyword)cGroup_5.eContents().get(0);
+		private final Assignment cDefaultValueAssignment_5_1 = (Assignment)cGroup_5.eContents().get(1);
+		private final RuleCall cDefaultValueSTRINGTerminalRuleCall_5_1_0 = (RuleCall)cDefaultValueAssignment_5_1.eContents().get(0);
+		
+		// // Return type
+		//PropertyDefinition:
+		//    annotations+=Annotation*
+		//    visibility=VisibilityModifier? // Optional visibility
+		//    name=ID ':' type=Type ('=' defaultValue=STRING)?;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//annotations+=Annotation*
+		//visibility=VisibilityModifier? // Optional visibility
+		//name=ID ':' type=Type ('=' defaultValue=STRING)?
+		public Group getGroup() { return cGroup; }
+		
+		//annotations+=Annotation*
+		public Assignment getAnnotationsAssignment_0() { return cAnnotationsAssignment_0; }
+		
+		//Annotation
+		public RuleCall getAnnotationsAnnotationParserRuleCall_0_0() { return cAnnotationsAnnotationParserRuleCall_0_0; }
+		
+		//visibility=VisibilityModifier?
+		public Assignment getVisibilityAssignment_1() { return cVisibilityAssignment_1; }
+		
+		//VisibilityModifier
+		public RuleCall getVisibilityVisibilityModifierParserRuleCall_1_0() { return cVisibilityVisibilityModifierParserRuleCall_1_0; }
+		
+		//// Optional visibility
+		//   name=ID
+		public Assignment getNameAssignment_2() { return cNameAssignment_2; }
+		
+		//ID
+		public RuleCall getNameIDTerminalRuleCall_2_0() { return cNameIDTerminalRuleCall_2_0; }
+		
+		//':'
+		public Keyword getColonKeyword_3() { return cColonKeyword_3; }
+		
+		//type=Type
+		public Assignment getTypeAssignment_4() { return cTypeAssignment_4; }
+		
+		//Type
+		public RuleCall getTypeTypeParserRuleCall_4_0() { return cTypeTypeParserRuleCall_4_0; }
+		
+		//('=' defaultValue=STRING)?
+		public Group getGroup_5() { return cGroup_5; }
+		
+		//'='
+		public Keyword getEqualsSignKeyword_5_0() { return cEqualsSignKeyword_5_0; }
+		
+		//defaultValue=STRING
+		public Assignment getDefaultValueAssignment_5_1() { return cDefaultValueAssignment_5_1; }
+		
+		//STRING
+		public RuleCall getDefaultValueSTRINGTerminalRuleCall_5_1_0() { return cDefaultValueSTRINGTerminalRuleCall_5_1_0; }
+	}
+	public class ParameterDefinitionElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "springboot.automate.GrabDsl.ParameterDefinition");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Assignment cNameAssignment_0 = (Assignment)cGroup.eContents().get(0);
+		private final RuleCall cNameIDTerminalRuleCall_0_0 = (RuleCall)cNameAssignment_0.eContents().get(0);
+		private final Keyword cColonKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		private final Assignment cTypeAssignment_2 = (Assignment)cGroup.eContents().get(2);
+		private final RuleCall cTypeTypeParserRuleCall_2_0 = (RuleCall)cTypeAssignment_2.eContents().get(0);
+		private final Group cGroup_3 = (Group)cGroup.eContents().get(3);
+		private final Keyword cEqualsSignKeyword_3_0 = (Keyword)cGroup_3.eContents().get(0);
+		private final Assignment cDefaultValueAssignment_3_1 = (Assignment)cGroup_3.eContents().get(1);
+		private final RuleCall cDefaultValueSTRINGTerminalRuleCall_3_1_0 = (RuleCall)cDefaultValueAssignment_3_1.eContents().get(0);
+		
+		// // Property type
+		//ParameterDefinition:
+		//    name=ID ':' type=Type ('=' defaultValue=STRING)?;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//name=ID ':' type=Type ('=' defaultValue=STRING)?
+		public Group getGroup() { return cGroup; }
+		
+		//name=ID
+		public Assignment getNameAssignment_0() { return cNameAssignment_0; }
+		
+		//ID
+		public RuleCall getNameIDTerminalRuleCall_0_0() { return cNameIDTerminalRuleCall_0_0; }
+		
+		//':'
+		public Keyword getColonKeyword_1() { return cColonKeyword_1; }
+		
+		//type=Type
+		public Assignment getTypeAssignment_2() { return cTypeAssignment_2; }
+		
+		//Type
+		public RuleCall getTypeTypeParserRuleCall_2_0() { return cTypeTypeParserRuleCall_2_0; }
+		
+		//('=' defaultValue=STRING)?
+		public Group getGroup_3() { return cGroup_3; }
+		
+		//'='
+		public Keyword getEqualsSignKeyword_3_0() { return cEqualsSignKeyword_3_0; }
+		
+		//defaultValue=STRING
+		public Assignment getDefaultValueAssignment_3_1() { return cDefaultValueAssignment_3_1; }
+		
+		//STRING
+		public RuleCall getDefaultValueSTRINGTerminalRuleCall_3_1_0() { return cDefaultValueSTRINGTerminalRuleCall_3_1_0; }
+	}
+	public class AnnotationElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "springboot.automate.GrabDsl.Annotation");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Keyword cCommercialAtKeyword_0 = (Keyword)cGroup.eContents().get(0);
+		private final Assignment cNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cNameIDTerminalRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
+		private final Group cGroup_2 = (Group)cGroup.eContents().get(2);
+		private final Keyword cLeftParenthesisKeyword_2_0 = (Keyword)cGroup_2.eContents().get(0);
+		private final Group cGroup_2_1 = (Group)cGroup_2.eContents().get(1);
+		private final Assignment cArgumentsAssignment_2_1_0 = (Assignment)cGroup_2_1.eContents().get(0);
+		private final RuleCall cArgumentsAnnotationArgumentParserRuleCall_2_1_0_0 = (RuleCall)cArgumentsAssignment_2_1_0.eContents().get(0);
+		private final Group cGroup_2_1_1 = (Group)cGroup_2_1.eContents().get(1);
+		private final Keyword cCommaKeyword_2_1_1_0 = (Keyword)cGroup_2_1_1.eContents().get(0);
+		private final Assignment cArgumentsAssignment_2_1_1_1 = (Assignment)cGroup_2_1_1.eContents().get(1);
+		private final RuleCall cArgumentsAnnotationArgumentParserRuleCall_2_1_1_1_0 = (RuleCall)cArgumentsAssignment_2_1_1_1.eContents().get(0);
+		private final Keyword cRightParenthesisKeyword_2_2 = (Keyword)cGroup_2.eContents().get(2);
+		
+		//// Parameter name and type
+		//Annotation:
+		//    '@' name=ID ('(' (arguments+=AnnotationArgument (',' arguments+=AnnotationArgument)*)? ')')?;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//'@' name=ID ('(' (arguments+=AnnotationArgument (',' arguments+=AnnotationArgument)*)? ')')?
+		public Group getGroup() { return cGroup; }
+		
+		//'@'
+		public Keyword getCommercialAtKeyword_0() { return cCommercialAtKeyword_0; }
 		
 		//name=ID
 		public Assignment getNameAssignment_1() { return cNameAssignment_1; }
@@ -60,13 +463,222 @@ public class GrabDslGrammarAccess extends AbstractElementFinder.AbstractGrammarE
 		//ID
 		public RuleCall getNameIDTerminalRuleCall_1_0() { return cNameIDTerminalRuleCall_1_0; }
 		
-		//'!'
-		public Keyword getExclamationMarkKeyword_2() { return cExclamationMarkKeyword_2; }
+		//('(' (arguments+=AnnotationArgument (',' arguments+=AnnotationArgument)*)? ')')?
+		public Group getGroup_2() { return cGroup_2; }
+		
+		//'('
+		public Keyword getLeftParenthesisKeyword_2_0() { return cLeftParenthesisKeyword_2_0; }
+		
+		//(arguments+=AnnotationArgument (',' arguments+=AnnotationArgument)*)?
+		public Group getGroup_2_1() { return cGroup_2_1; }
+		
+		//arguments+=AnnotationArgument
+		public Assignment getArgumentsAssignment_2_1_0() { return cArgumentsAssignment_2_1_0; }
+		
+		//AnnotationArgument
+		public RuleCall getArgumentsAnnotationArgumentParserRuleCall_2_1_0_0() { return cArgumentsAnnotationArgumentParserRuleCall_2_1_0_0; }
+		
+		//(',' arguments+=AnnotationArgument)*
+		public Group getGroup_2_1_1() { return cGroup_2_1_1; }
+		
+		//','
+		public Keyword getCommaKeyword_2_1_1_0() { return cCommaKeyword_2_1_1_0; }
+		
+		//arguments+=AnnotationArgument
+		public Assignment getArgumentsAssignment_2_1_1_1() { return cArgumentsAssignment_2_1_1_1; }
+		
+		//AnnotationArgument
+		public RuleCall getArgumentsAnnotationArgumentParserRuleCall_2_1_1_1_0() { return cArgumentsAnnotationArgumentParserRuleCall_2_1_1_1_0; }
+		
+		//')'
+		public Keyword getRightParenthesisKeyword_2_2() { return cRightParenthesisKeyword_2_2; }
+	}
+	public class AnnotationArgumentElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "springboot.automate.GrabDsl.AnnotationArgument");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Assignment cNameAssignment_0 = (Assignment)cGroup.eContents().get(0);
+		private final RuleCall cNameIDTerminalRuleCall_0_0 = (RuleCall)cNameAssignment_0.eContents().get(0);
+		private final Keyword cEqualsSignKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		private final Assignment cValueAssignment_2 = (Assignment)cGroup.eContents().get(2);
+		private final RuleCall cValueSTRINGTerminalRuleCall_2_0 = (RuleCall)cValueAssignment_2.eContents().get(0);
+		
+		//AnnotationArgument:
+		//    name=ID '=' value=STRING;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//name=ID '=' value=STRING
+		public Group getGroup() { return cGroup; }
+		
+		//name=ID
+		public Assignment getNameAssignment_0() { return cNameAssignment_0; }
+		
+		//ID
+		public RuleCall getNameIDTerminalRuleCall_0_0() { return cNameIDTerminalRuleCall_0_0; }
+		
+		//'='
+		public Keyword getEqualsSignKeyword_1() { return cEqualsSignKeyword_1; }
+		
+		//value=STRING
+		public Assignment getValueAssignment_2() { return cValueAssignment_2; }
+		
+		//STRING
+		public RuleCall getValueSTRINGTerminalRuleCall_2_0() { return cValueSTRINGTerminalRuleCall_2_0; }
+	}
+	public class VisibilityModifierElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "springboot.automate.GrabDsl.VisibilityModifier");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final Keyword cPublicKeyword_0 = (Keyword)cAlternatives.eContents().get(0);
+		private final Keyword cPrivateKeyword_1 = (Keyword)cAlternatives.eContents().get(1);
+		private final Keyword cProtectedKeyword_2 = (Keyword)cAlternatives.eContents().get(2);
+		
+		// // Annotation argument as key-value pairs
+		//VisibilityModifier:
+		//    'public' | 'private' | 'protected';
+		@Override public ParserRule getRule() { return rule; }
+		
+		//'public' | 'private' | 'protected'
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//'public'
+		public Keyword getPublicKeyword_0() { return cPublicKeyword_0; }
+		
+		//'private'
+		public Keyword getPrivateKeyword_1() { return cPrivateKeyword_1; }
+		
+		//'protected'
+		public Keyword getProtectedKeyword_2() { return cProtectedKeyword_2; }
+	}
+	public class TypeElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "springboot.automate.GrabDsl.Type");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final RuleCall cPrimitiveTypeParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
+		private final RuleCall cQualifiedNameParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final RuleCall cGenericTypeParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
+		
+		// // Direct keywords
+		//Type:
+		//    PrimitiveType | QualifiedName | GenericType;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//PrimitiveType | QualifiedName | GenericType
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//PrimitiveType
+		public RuleCall getPrimitiveTypeParserRuleCall_0() { return cPrimitiveTypeParserRuleCall_0; }
+		
+		//QualifiedName
+		public RuleCall getQualifiedNameParserRuleCall_1() { return cQualifiedNameParserRuleCall_1; }
+		
+		//GenericType
+		public RuleCall getGenericTypeParserRuleCall_2() { return cGenericTypeParserRuleCall_2; }
+	}
+	public class PrimitiveTypeElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "springboot.automate.GrabDsl.PrimitiveType");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final Keyword cVoidKeyword_0 = (Keyword)cAlternatives.eContents().get(0);
+		private final Keyword cStringKeyword_1 = (Keyword)cAlternatives.eContents().get(1);
+		private final Keyword cUUIDKeyword_2 = (Keyword)cAlternatives.eContents().get(2);
+		private final Keyword cDateKeyword_3 = (Keyword)cAlternatives.eContents().get(3);
+		private final Keyword cTimestampKeyword_4 = (Keyword)cAlternatives.eContents().get(4);
+		private final Keyword cListKeyword_5 = (Keyword)cAlternatives.eContents().get(5);
+		
+		// // Types can be primitive or qualified names
+		//PrimitiveType:
+		//    'void' | 'String' | 'UUID' | 'Date' | 'Timestamp' | 'List';
+		@Override public ParserRule getRule() { return rule; }
+		
+		//'void' | 'String' | 'UUID' | 'Date' | 'Timestamp' | 'List'
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//'void'
+		public Keyword getVoidKeyword_0() { return cVoidKeyword_0; }
+		
+		//'String'
+		public Keyword getStringKeyword_1() { return cStringKeyword_1; }
+		
+		//'UUID'
+		public Keyword getUUIDKeyword_2() { return cUUIDKeyword_2; }
+		
+		//'Date'
+		public Keyword getDateKeyword_3() { return cDateKeyword_3; }
+		
+		//'Timestamp'
+		public Keyword getTimestampKeyword_4() { return cTimestampKeyword_4; }
+		
+		//'List'
+		public Keyword getListKeyword_5() { return cListKeyword_5; }
+	}
+	public class QualifiedNameElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "springboot.automate.GrabDsl.QualifiedName");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cIDTerminalRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
+		private final Keyword cFullStopKeyword_1_0 = (Keyword)cGroup_1.eContents().get(0);
+		private final RuleCall cIDTerminalRuleCall_1_1 = (RuleCall)cGroup_1.eContents().get(1);
+		
+		//QualifiedName:
+		//    ID ('.' ID)*;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//ID ('.' ID)*
+		public Group getGroup() { return cGroup; }
+		
+		//ID
+		public RuleCall getIDTerminalRuleCall_0() { return cIDTerminalRuleCall_0; }
+		
+		//('.' ID)*
+		public Group getGroup_1() { return cGroup_1; }
+		
+		//'.'
+		public Keyword getFullStopKeyword_1_0() { return cFullStopKeyword_1_0; }
+		
+		//ID
+		public RuleCall getIDTerminalRuleCall_1_1() { return cIDTerminalRuleCall_1_1; }
+	}
+	public class GenericTypeElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "springboot.automate.GrabDsl.GenericType");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cQualifiedNameParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Keyword cLessThanSignKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		private final RuleCall cTypeParserRuleCall_2 = (RuleCall)cGroup.eContents().get(2);
+		private final Keyword cGreaterThanSignKeyword_3 = (Keyword)cGroup.eContents().get(3);
+		
+		// // Fully qualified names (e.g., com.example)
+		//GenericType:
+		//    QualifiedName '<' Type '>';
+		@Override public ParserRule getRule() { return rule; }
+		
+		//QualifiedName '<' Type '>'
+		public Group getGroup() { return cGroup; }
+		
+		//QualifiedName
+		public RuleCall getQualifiedNameParserRuleCall_0() { return cQualifiedNameParserRuleCall_0; }
+		
+		//'<'
+		public Keyword getLessThanSignKeyword_1() { return cLessThanSignKeyword_1; }
+		
+		//Type
+		public RuleCall getTypeParserRuleCall_2() { return cTypeParserRuleCall_2; }
+		
+		//'>'
+		public Keyword getGreaterThanSignKeyword_3() { return cGreaterThanSignKeyword_3; }
 	}
 	
 	
 	private final ModelElements pModel;
-	private final GreetingElements pGreeting;
+	private final PackageDefinitionElements pPackageDefinition;
+	private final ClassDefinitionElements pClassDefinition;
+	private final MemberDefinitionElements pMemberDefinition;
+	private final MethodDefinitionElements pMethodDefinition;
+	private final PropertyDefinitionElements pPropertyDefinition;
+	private final ParameterDefinitionElements pParameterDefinition;
+	private final AnnotationElements pAnnotation;
+	private final AnnotationArgumentElements pAnnotationArgument;
+	private final VisibilityModifierElements pVisibilityModifier;
+	private final TypeElements pType;
+	private final PrimitiveTypeElements pPrimitiveType;
+	private final QualifiedNameElements pQualifiedName;
+	private final GenericTypeElements pGenericType;
 	
 	private final Grammar grammar;
 	
@@ -78,7 +690,19 @@ public class GrabDslGrammarAccess extends AbstractElementFinder.AbstractGrammarE
 		this.grammar = internalFindGrammar(grammarProvider);
 		this.gaTerminals = gaTerminals;
 		this.pModel = new ModelElements();
-		this.pGreeting = new GreetingElements();
+		this.pPackageDefinition = new PackageDefinitionElements();
+		this.pClassDefinition = new ClassDefinitionElements();
+		this.pMemberDefinition = new MemberDefinitionElements();
+		this.pMethodDefinition = new MethodDefinitionElements();
+		this.pPropertyDefinition = new PropertyDefinitionElements();
+		this.pParameterDefinition = new ParameterDefinitionElements();
+		this.pAnnotation = new AnnotationElements();
+		this.pAnnotationArgument = new AnnotationArgumentElements();
+		this.pVisibilityModifier = new VisibilityModifierElements();
+		this.pType = new TypeElements();
+		this.pPrimitiveType = new PrimitiveTypeElements();
+		this.pQualifiedName = new QualifiedNameElements();
+		this.pGenericType = new GenericTypeElements();
 	}
 	
 	protected Grammar internalFindGrammar(GrammarProvider grammarProvider) {
@@ -108,8 +732,11 @@ public class GrabDslGrammarAccess extends AbstractElementFinder.AbstractGrammarE
 	}
 
 	
+	//// Entry point for the grammar
 	//Model:
-	//    greetings+=Greeting*;
+	//    'package' packageName=QualifiedName '{'
+	//        packages+=PackageDefinition*
+	//    '}';
 	public ModelElements getModelAccess() {
 		return pModel;
 	}
@@ -118,14 +745,155 @@ public class GrabDslGrammarAccess extends AbstractElementFinder.AbstractGrammarE
 		return getModelAccess().getRule();
 	}
 	
-	//Greeting:
-	//    'Hello' name=ID '!';
-	public GreetingElements getGreetingAccess() {
-		return pGreeting;
+	//PackageDefinition:
+	//    annotations+=Annotation*
+	//    'package' packageName=QualifiedName '{'
+	//        classes+=ClassDefinition*
+	//    '}';
+	public PackageDefinitionElements getPackageDefinitionAccess() {
+		return pPackageDefinition;
 	}
 	
-	public ParserRule getGreetingRule() {
-		return getGreetingAccess().getRule();
+	public ParserRule getPackageDefinitionRule() {
+		return getPackageDefinitionAccess().getRule();
+	}
+	
+	//ClassDefinition:
+	//    annotations+=Annotation*
+	//    'class' name=ID '{'
+	//        members+=MemberDefinition*
+	//    '}';
+	public ClassDefinitionElements getClassDefinitionAccess() {
+		return pClassDefinition;
+	}
+	
+	public ParserRule getClassDefinitionRule() {
+		return getClassDefinitionAccess().getRule();
+	}
+	
+	//MemberDefinition:
+	//    annotations+=Annotation*
+	//    (method=MethodDefinition | property=PropertyDefinition);
+	public MemberDefinitionElements getMemberDefinitionAccess() {
+		return pMemberDefinition;
+	}
+	
+	public ParserRule getMemberDefinitionRule() {
+		return getMemberDefinitionAccess().getRule();
+	}
+	
+	//MethodDefinition:
+	//    annotations+=Annotation*
+	//    visibility=VisibilityModifier? // Optional visibility
+	//    name=ID '('
+	//        (parameters+=ParameterDefinition (',' parameters+=ParameterDefinition)*)? // Parameter list
+	//    ')'
+	//    ':' returnType=Type ';';
+	public MethodDefinitionElements getMethodDefinitionAccess() {
+		return pMethodDefinition;
+	}
+	
+	public ParserRule getMethodDefinitionRule() {
+		return getMethodDefinitionAccess().getRule();
+	}
+	
+	// // Return type
+	//PropertyDefinition:
+	//    annotations+=Annotation*
+	//    visibility=VisibilityModifier? // Optional visibility
+	//    name=ID ':' type=Type ('=' defaultValue=STRING)?;
+	public PropertyDefinitionElements getPropertyDefinitionAccess() {
+		return pPropertyDefinition;
+	}
+	
+	public ParserRule getPropertyDefinitionRule() {
+		return getPropertyDefinitionAccess().getRule();
+	}
+	
+	// // Property type
+	//ParameterDefinition:
+	//    name=ID ':' type=Type ('=' defaultValue=STRING)?;
+	public ParameterDefinitionElements getParameterDefinitionAccess() {
+		return pParameterDefinition;
+	}
+	
+	public ParserRule getParameterDefinitionRule() {
+		return getParameterDefinitionAccess().getRule();
+	}
+	
+	//// Parameter name and type
+	//Annotation:
+	//    '@' name=ID ('(' (arguments+=AnnotationArgument (',' arguments+=AnnotationArgument)*)? ')')?;
+	public AnnotationElements getAnnotationAccess() {
+		return pAnnotation;
+	}
+	
+	public ParserRule getAnnotationRule() {
+		return getAnnotationAccess().getRule();
+	}
+	
+	//AnnotationArgument:
+	//    name=ID '=' value=STRING;
+	public AnnotationArgumentElements getAnnotationArgumentAccess() {
+		return pAnnotationArgument;
+	}
+	
+	public ParserRule getAnnotationArgumentRule() {
+		return getAnnotationArgumentAccess().getRule();
+	}
+	
+	// // Annotation argument as key-value pairs
+	//VisibilityModifier:
+	//    'public' | 'private' | 'protected';
+	public VisibilityModifierElements getVisibilityModifierAccess() {
+		return pVisibilityModifier;
+	}
+	
+	public ParserRule getVisibilityModifierRule() {
+		return getVisibilityModifierAccess().getRule();
+	}
+	
+	// // Direct keywords
+	//Type:
+	//    PrimitiveType | QualifiedName | GenericType;
+	public TypeElements getTypeAccess() {
+		return pType;
+	}
+	
+	public ParserRule getTypeRule() {
+		return getTypeAccess().getRule();
+	}
+	
+	// // Types can be primitive or qualified names
+	//PrimitiveType:
+	//    'void' | 'String' | 'UUID' | 'Date' | 'Timestamp' | 'List';
+	public PrimitiveTypeElements getPrimitiveTypeAccess() {
+		return pPrimitiveType;
+	}
+	
+	public ParserRule getPrimitiveTypeRule() {
+		return getPrimitiveTypeAccess().getRule();
+	}
+	
+	//QualifiedName:
+	//    ID ('.' ID)*;
+	public QualifiedNameElements getQualifiedNameAccess() {
+		return pQualifiedName;
+	}
+	
+	public ParserRule getQualifiedNameRule() {
+		return getQualifiedNameAccess().getRule();
+	}
+	
+	// // Fully qualified names (e.g., com.example)
+	//GenericType:
+	//    QualifiedName '<' Type '>';
+	public GenericTypeElements getGenericTypeAccess() {
+		return pGenericType;
+	}
+	
+	public ParserRule getGenericTypeRule() {
+		return getGenericTypeAccess().getRule();
 	}
 	
 	//terminal ID: '^'?('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;

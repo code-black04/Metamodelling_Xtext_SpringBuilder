@@ -33,13 +33,76 @@ public interface GrabDslFactory extends EFactory
   Model createModel();
 
   /**
-   * Returns a new object of class '<em>Greeting</em>'.
+   * Returns a new object of class '<em>Package Definition</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Greeting</em>'.
+   * @return a new object of class '<em>Package Definition</em>'.
    * @generated
    */
-  Greeting createGreeting();
+  PackageDefinition createPackageDefinition();
+
+  /**
+   * Returns a new object of class '<em>Class Definition</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Class Definition</em>'.
+   * @generated
+   */
+  ClassDefinition createClassDefinition();
+
+  /**
+   * Returns a new object of class '<em>Member Definition</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Member Definition</em>'.
+   * @generated
+   */
+  MemberDefinition createMemberDefinition();
+
+  /**
+   * Returns a new object of class '<em>Method Definition</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Method Definition</em>'.
+   * @generated
+   */
+  MethodDefinition createMethodDefinition();
+
+  /**
+   * Returns a new object of class '<em>Property Definition</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Property Definition</em>'.
+   * @generated
+   */
+  PropertyDefinition createPropertyDefinition();
+
+  /**
+   * Returns a new object of class '<em>Parameter Definition</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Parameter Definition</em>'.
+   * @generated
+   */
+  ParameterDefinition createParameterDefinition();
+
+  /**
+   * Returns a new object of class '<em>Annotation</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Annotation</em>'.
+   * @generated
+   */
+  Annotation createAnnotation();
+
+  /**
+   * Returns a new object of class '<em>Annotation Argument</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Annotation Argument</em>'.
+   * @generated
+   */
+  AnnotationArgument createAnnotationArgument();
 
   /**
    * Returns the package supported by this factory.
