@@ -67,7 +67,7 @@ class GrabDslGeneratorGroovy {
 			packageName = "${parentPackageName}.${packageName}"
 		}
 		println "Processing package: $packageName"
-		
+
 		if (!packageName) {
 			println "Package name is null or empty. Skipping package generation."
 			return
@@ -83,6 +83,7 @@ class GrabDslGeneratorGroovy {
 		pkg.classes?.eachWithIndex { cls, idx ->
 			// Merge package-level annotations with class-level annotations
 			cls.annotations = (cls.annotations ?: []) + (pkg.annotations ?: [])
+			cls.annotations = cls.annotations.unique { it.name }
 			println "Found class: ${cls.name}"
 			println "Class ${idx + 1}: ${cls.name} | Annotations: ${cls.annotations?.collect { it.name }}"
 			generateClass(cls, packageDir)
@@ -105,6 +106,41 @@ class GrabDslGeneratorGroovy {
 		println "Using package declaration: $packageName"
 		content.append("package $packageName;\n\n")
 
+		// Sets to track imports and autowired fields
+		def imports = new HashSet<String>()
+		def autowiredFields = new HashSet<String>()
+
+		// Add Spring autowired annotation import
+		imports.add("org.springframework.beans.factory.annotation.Autowired")
+		imports.add("org.springframework.web.bind.annotation.RequestMapping")
+		imports.add("org.springframework.web.bind.annotation.RequestMethod.*")
+
+		// Collect necessary imports and autowired fields
+		cls.members.each { member ->
+			if (member.method) {
+				member.method.parameters.each { param ->
+					if (param.type?.toString()?.contains("dto.")) {
+						// Generate fully qualified name for import
+						def type = "com.project.${param.type}"
+						imports.add(type) // Add to imports
+						def fieldName = type.split("\\.").last().uncapitalize()
+						if (!autowiredFields.contains(fieldName)) {
+							autowiredFields.add(fieldName) // Add to autowired fields
+						}
+					}
+				}
+			}
+		}
+
+		// Add imports to the content
+		imports.each { importStatement ->
+			if (!importStatement.equals(packageName)) {
+				// Avoid self-import
+				content.append("import $importStatement;\n")
+			}
+		}
+		content.append("\n")
+
 		// Add class-level annotations
 		cls.annotations?.each { annotation ->
 			def annotationText = generateAnnotation(annotation)
@@ -115,6 +151,14 @@ class GrabDslGeneratorGroovy {
 		// Add class declaration
 		content.append("public class ${cls.name} {\n\n")
 
+		// Add autowired fields
+		// TODO by Purnima Once IUserInterface is done, add imports as well with autowiring
+		autowiredFields.each { fieldName ->
+			def className = fieldName.capitalize() // Extract the class name from the field name
+			println "Adding autowired field: ${fieldName} of type: ${className}"
+			content.append("    @Autowired\n    private ${className} ${fieldName};")
+		}
+		
 		// Add members
 		cls.members?.each { member ->
 			if (member.method) {
@@ -124,10 +168,11 @@ class GrabDslGeneratorGroovy {
 			}
 		}
 
-		content.append("}\n")
+		content.append("}")
 		classFile.text = content.toString()
 		println "Class file written: ${classFile.absolutePath}"
 	}
+
 
 
 	static String generateProperty(PropertyDefinition property) {
@@ -142,12 +187,12 @@ class GrabDslGeneratorGroovy {
 		def defaultValue = property.defaultValue ? " = ${property.defaultValue}" : ""
 
 		// Add annotations if available
-		def annotations = ""
-		if (property.hasProperty('annotations') && property.annotations) {
-			annotations = property.annotations.collect { generateAnnotation(it) }.join("\n    ")
-		}
+		def annotations = property.annotations?.collect { generateAnnotation(it) }?.join("\n    ") ?: ""
 
-		return "${annotations}\n    $visibility $typeName $propertyName${defaultValue};"
+		if (annotations.isEmpty()) {
+			return "$visibility $typeName $propertyName${defaultValue};\n"
+		}
+		return "\n\n	${annotations}\n    $visibility $typeName $propertyName${defaultValue};"
 	}
 
 
@@ -160,27 +205,32 @@ class GrabDslGeneratorGroovy {
 
 		// Handle parameters
 		def parameters = method.parameters?.collect { param ->
-			def typeName = (param.type instanceof String) ? param.type : param.type?.name ?: "Object"
+			def typeName = (param.type instanceof String) ? param.type.split("\\.").last() : param.type?.name ?: "Object"
 			def paramName = param.name ?: "param"
-			def defaultValue = param.defaultValue ? " = ${param.defaultValue}" : ""
-			return "$typeName $paramName$defaultValue"
+			return "$typeName $paramName"
 		}?.join(", ") ?: ""
 
 		// Handle return type
-		def returnType = (method.returnType instanceof String) ? method.returnType : method.returnType?.name ?: "void"
+		def returnType = (method.returnType instanceof String) ? method.returnType.split("\\.").last() : method.returnType?.name ?: "void"
 
-		// Add annotations
-		def annotations = method.annotations?.collect { generateAnnotation(it) }?.join("\n    ") ?: ""
+		def annotations = method.annotations?.collect { annotation ->
+			if (annotation.name == "RequestMapping") {
+				def methodArg = annotation.arguments.find { it.name == "method" }?.value?.toUpperCase() ?: "GET"
+				return "	@RequestMapping(method = RequestMethod.${methodArg})"
+			}
+			generateAnnotation(annotation)
+		}?.join("\n    ") ?: ""
 
-		return "${annotations}\n    $visibility $returnType ${method.name}($parameters) {\n        // TODO: Implement method\n    }"
+		return "\n${annotations}\n    $visibility $returnType ${method.name}($parameters) {\n        // TODO: Implement method\n    }"
 	}
-
-
 
 	static String generateAnnotation(Annotation annotation) {
 		def annotationText = "@${annotation.name}"
 		if (annotation.arguments) {
-			def arguments = annotation.arguments.collect { "${it.name}=${it.value}" }.join(", ")
+			def arguments = annotation.arguments.collect {
+				def value = (it.value instanceof String) ? "\"${it.value}\"" : it.value
+				"${it.name}=${value}"
+			}.join(", ")
 			annotationText += "($arguments)"
 		}
 		return annotationText

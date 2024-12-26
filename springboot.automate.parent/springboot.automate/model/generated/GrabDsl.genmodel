@@ -21,7 +21,6 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//ClassDefinition/members"/>
     </genClasses>
     <genClasses ecoreClass="GrabDsl.ecore#//MemberDefinition">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//MemberDefinition/annotations"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//MemberDefinition/method"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//MemberDefinition/property"/>
     </genClasses>

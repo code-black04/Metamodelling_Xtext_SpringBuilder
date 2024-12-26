@@ -1,20 +1,61 @@
 package com.project {
     package controller {
-        @RestController
+        @RestController(path="\\api")
         class UsersController {
+            @Autowired
+            private iUsersService: IUsersService
+
+            @RequestMapping(method = "POST")
             public createUsers(userDto: dto.UsersDto): void
-            public updateUser(userId: UUID, userDto: dto.UsersDto): void
+
+            @RequestMapping(method = "PUT")
+            public updateUser(userId: UUID, userDto: UsersDto): void
+
+            @RequestMapping(method = "DELETE")
             public deleteUser(userId: UUID): void
-            public getAllUsers(): List<dto.UsersDto>
-            public getUserByUsername(username: String): dto.UsersDto
+
+            @RequestMapping(method = "GET")
+            public getAllUsers(): List<UsersDto>
+
+            @RequestMapping(method = "GET")
+            public getUserByUsername(username: String): UsersDto
         }
+
         @RestController
         class UsersController1 {
+            @Autowired
+            private usersService: UsersService
+
+            @RequestMapping(method = "POST")
             public createUsers(userDto: dto.UsersDto): void
+
+            @RequestMapping(method = "PUT")
             public updateUser(userId: UUID, userDto: dto.UsersDto): void
+
+            @RequestMapping(method = "DELETE")
             public deleteUser(userId: UUID): void
+
+            @RequestMapping(method = "GET")
             public getAllUsers(): List<dto.UsersDto>
+
+            @RequestMapping(method = "GET")
             public getUserByUsername(username: String): dto.UsersDto
+        }
+    }
+
+    package service {
+        @Service
+        class UsersService {
+
+            public createUsers(userDto: UsersDto): void
+
+            public updateUser(userId: UUID, userDto: UsersDto): void
+
+            public deleteUser(userId: UUID): void
+
+            public getAllUsers(): List<UsersDto>
+
+            public getUserByUsername(username: String): UsersDto
         }
     }
 
@@ -30,6 +71,7 @@ package com.project {
             private dob: Date
             private createdAt: Timestamp
         }
+
         @Data
         @NoArgsConstructor
         @AllArgsConstructor

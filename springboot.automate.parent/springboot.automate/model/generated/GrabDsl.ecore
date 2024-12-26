@@ -21,8 +21,6 @@
         eType="#//MemberDefinition" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MemberDefinition">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="annotations" upperBound="-1"
-        eType="#//Annotation" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="method" eType="#//MethodDefinition"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="property" eType="#//PropertyDefinition"

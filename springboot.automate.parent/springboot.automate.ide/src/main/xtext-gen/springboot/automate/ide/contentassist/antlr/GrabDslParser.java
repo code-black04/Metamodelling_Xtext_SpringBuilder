@@ -31,14 +31,13 @@ public class GrabDslParser extends AbstractContentAssistParser {
 		}
 		
 		private static void init(ImmutableMap.Builder<AbstractElement, String> builder, GrabDslGrammarAccess grammarAccess) {
-			builder.put(grammarAccess.getMemberDefinitionAccess().getAlternatives_1(), "rule__MemberDefinition__Alternatives_1");
+			builder.put(grammarAccess.getMemberDefinitionAccess().getAlternatives(), "rule__MemberDefinition__Alternatives");
 			builder.put(grammarAccess.getVisibilityModifierAccess().getAlternatives(), "rule__VisibilityModifier__Alternatives");
 			builder.put(grammarAccess.getTypeAccess().getAlternatives(), "rule__Type__Alternatives");
 			builder.put(grammarAccess.getPrimitiveTypeAccess().getAlternatives(), "rule__PrimitiveType__Alternatives");
 			builder.put(grammarAccess.getModelAccess().getGroup(), "rule__Model__Group__0");
 			builder.put(grammarAccess.getPackageDefinitionAccess().getGroup(), "rule__PackageDefinition__Group__0");
 			builder.put(grammarAccess.getClassDefinitionAccess().getGroup(), "rule__ClassDefinition__Group__0");
-			builder.put(grammarAccess.getMemberDefinitionAccess().getGroup(), "rule__MemberDefinition__Group__0");
 			builder.put(grammarAccess.getMethodDefinitionAccess().getGroup(), "rule__MethodDefinition__Group__0");
 			builder.put(grammarAccess.getMethodDefinitionAccess().getGroup_4(), "rule__MethodDefinition__Group_4__0");
 			builder.put(grammarAccess.getMethodDefinitionAccess().getGroup_4_1(), "rule__MethodDefinition__Group_4_1__0");
@@ -62,9 +61,8 @@ public class GrabDslParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getClassDefinitionAccess().getAnnotationsAssignment_0(), "rule__ClassDefinition__AnnotationsAssignment_0");
 			builder.put(grammarAccess.getClassDefinitionAccess().getNameAssignment_2(), "rule__ClassDefinition__NameAssignment_2");
 			builder.put(grammarAccess.getClassDefinitionAccess().getMembersAssignment_4(), "rule__ClassDefinition__MembersAssignment_4");
-			builder.put(grammarAccess.getMemberDefinitionAccess().getAnnotationsAssignment_0(), "rule__MemberDefinition__AnnotationsAssignment_0");
-			builder.put(grammarAccess.getMemberDefinitionAccess().getMethodAssignment_1_0(), "rule__MemberDefinition__MethodAssignment_1_0");
-			builder.put(grammarAccess.getMemberDefinitionAccess().getPropertyAssignment_1_1(), "rule__MemberDefinition__PropertyAssignment_1_1");
+			builder.put(grammarAccess.getMemberDefinitionAccess().getMethodAssignment_0(), "rule__MemberDefinition__MethodAssignment_0");
+			builder.put(grammarAccess.getMemberDefinitionAccess().getPropertyAssignment_1(), "rule__MemberDefinition__PropertyAssignment_1");
 			builder.put(grammarAccess.getMethodDefinitionAccess().getAnnotationsAssignment_0(), "rule__MethodDefinition__AnnotationsAssignment_0");
 			builder.put(grammarAccess.getMethodDefinitionAccess().getVisibilityAssignment_1(), "rule__MethodDefinition__VisibilityAssignment_1");
 			builder.put(grammarAccess.getMethodDefinitionAccess().getNameAssignment_2(), "rule__MethodDefinition__NameAssignment_2");

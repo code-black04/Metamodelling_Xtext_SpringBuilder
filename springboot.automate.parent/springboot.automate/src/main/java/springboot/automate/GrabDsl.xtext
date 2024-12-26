@@ -21,7 +21,6 @@ ClassDefinition:
     '}';
 
 MemberDefinition:
-    annotations+=Annotation*
     (method=MethodDefinition | property=PropertyDefinition);
 
 MethodDefinition:
@@ -53,7 +52,7 @@ Type:
     PrimitiveType | QualifiedName | GenericType; // Types can be primitive or qualified names
 
 PrimitiveType:
-    'void' | 'String' | 'UUID' | 'Date' | 'Timestamp' | 'List';
+    'void' | 'String' | 'double' | 'float' | 'int' | 'UUID' | 'Date' | 'Timestamp' | 'List';
 
 QualifiedName:
     ID ('.' ID)*; // Fully qualified names (e.g., com.example)
