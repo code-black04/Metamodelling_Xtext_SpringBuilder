@@ -17,6 +17,7 @@ class GrabDslParsingTestGroovy {
 	ParseHelper<Model> parseHelper
 	
 	@Test
+	@Deprecated
 	void testPackge() {
 		def result = parseHelper.parse("""
 Hello BB!
