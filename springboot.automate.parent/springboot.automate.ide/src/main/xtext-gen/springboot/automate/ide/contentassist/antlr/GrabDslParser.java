@@ -38,6 +38,8 @@ public class GrabDslParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getModelAccess().getGroup(), "rule__Model__Group__0");
 			builder.put(grammarAccess.getPackageDefinitionAccess().getGroup(), "rule__PackageDefinition__Group__0");
 			builder.put(grammarAccess.getClassDefinitionAccess().getGroup(), "rule__ClassDefinition__Group__0");
+			builder.put(grammarAccess.getClassDefinitionAccess().getGroup_3(), "rule__ClassDefinition__Group_3__0");
+			builder.put(grammarAccess.getInterfaceDefinitionAccess().getGroup(), "rule__InterfaceDefinition__Group__0");
 			builder.put(grammarAccess.getMethodDefinitionAccess().getGroup(), "rule__MethodDefinition__Group__0");
 			builder.put(grammarAccess.getMethodDefinitionAccess().getGroup_4(), "rule__MethodDefinition__Group_4__0");
 			builder.put(grammarAccess.getMethodDefinitionAccess().getGroup_4_1(), "rule__MethodDefinition__Group_4_1__0");
@@ -58,9 +60,14 @@ public class GrabDslParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getPackageDefinitionAccess().getAnnotationsAssignment_0(), "rule__PackageDefinition__AnnotationsAssignment_0");
 			builder.put(grammarAccess.getPackageDefinitionAccess().getPackageNameAssignment_2(), "rule__PackageDefinition__PackageNameAssignment_2");
 			builder.put(grammarAccess.getPackageDefinitionAccess().getClassesAssignment_4(), "rule__PackageDefinition__ClassesAssignment_4");
+			builder.put(grammarAccess.getPackageDefinitionAccess().getInterfaceAssignment_5(), "rule__PackageDefinition__InterfaceAssignment_5");
 			builder.put(grammarAccess.getClassDefinitionAccess().getAnnotationsAssignment_0(), "rule__ClassDefinition__AnnotationsAssignment_0");
 			builder.put(grammarAccess.getClassDefinitionAccess().getNameAssignment_2(), "rule__ClassDefinition__NameAssignment_2");
-			builder.put(grammarAccess.getClassDefinitionAccess().getMembersAssignment_4(), "rule__ClassDefinition__MembersAssignment_4");
+			builder.put(grammarAccess.getClassDefinitionAccess().getInterfaceAssignment_3_1(), "rule__ClassDefinition__InterfaceAssignment_3_1");
+			builder.put(grammarAccess.getClassDefinitionAccess().getMembersAssignment_5(), "rule__ClassDefinition__MembersAssignment_5");
+			builder.put(grammarAccess.getInterfaceDefinitionAccess().getAnnotationsAssignment_0(), "rule__InterfaceDefinition__AnnotationsAssignment_0");
+			builder.put(grammarAccess.getInterfaceDefinitionAccess().getNameAssignment_2(), "rule__InterfaceDefinition__NameAssignment_2");
+			builder.put(grammarAccess.getInterfaceDefinitionAccess().getMembersAssignment_4(), "rule__InterfaceDefinition__MembersAssignment_4");
 			builder.put(grammarAccess.getMemberDefinitionAccess().getMethodAssignment_0(), "rule__MemberDefinition__MethodAssignment_0");
 			builder.put(grammarAccess.getMemberDefinitionAccess().getPropertyAssignment_1(), "rule__MemberDefinition__PropertyAssignment_1");
 			builder.put(grammarAccess.getMethodDefinitionAccess().getAnnotationsAssignment_0(), "rule__MethodDefinition__AnnotationsAssignment_0");

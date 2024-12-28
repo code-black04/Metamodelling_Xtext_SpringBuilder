@@ -14,11 +14,18 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//PackageDefinition/annotations"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//PackageDefinition/packageName"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//PackageDefinition/classes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//PackageDefinition/interface"/>
     </genClasses>
     <genClasses ecoreClass="GrabDsl.ecore#//ClassDefinition">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//ClassDefinition/annotations"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//ClassDefinition/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//ClassDefinition/interface"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//ClassDefinition/members"/>
+    </genClasses>
+    <genClasses ecoreClass="GrabDsl.ecore#//InterfaceDefinition">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//InterfaceDefinition/annotations"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//InterfaceDefinition/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//InterfaceDefinition/members"/>
     </genClasses>
     <genClasses ecoreClass="GrabDsl.ecore#//MemberDefinition">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//MemberDefinition/method"/>

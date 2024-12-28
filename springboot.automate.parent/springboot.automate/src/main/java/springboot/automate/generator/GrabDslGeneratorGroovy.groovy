@@ -17,6 +17,7 @@ import springboot.automate.grabDsl.Model
 import springboot.automate.grabDsl.PackageDefinition
 import springboot.automate.grabDsl.Annotation
 import springboot.automate.grabDsl.ClassDefinition
+import springboot.automate.grabDsl.InterfaceDefinition
 import springboot.automate.grabDsl.MemberDefinition
 import springboot.automate.grabDsl.MethodDefinition
 import springboot.automate.grabDsl.PropertyDefinition
@@ -88,6 +89,14 @@ class GrabDslGeneratorGroovy {
 			println "Class ${idx + 1}: ${cls.name} | Annotations: ${cls.annotations?.collect { it.name }}"
 			generateClass(cls, packageDir)
 		}
+		pkg.interface?.eachWithIndex { cls, idx ->
+			// Merge package-level annotations with class-level annotations
+			cls.annotations = (cls.annotations ?: []) + (pkg.annotations ?: [])
+			cls.annotations = cls.annotations.unique { it.name }
+			println "Found class: ${cls.name}"
+			println "Class ${idx + 1}: ${cls.name} | Annotations: ${cls.annotations?.collect { it.name }}"
+			generateClass(cls, packageDir)
+		}
 	}
 
 	static void generateClass(ClassDefinition cls, File packageDir) {
@@ -148,8 +157,12 @@ class GrabDslGeneratorGroovy {
 			content.append(annotationText).append("\n")
 		}
 
-		// Add class declaration
-		content.append("public class ${cls.name} {\n\n")
+		// Add class declaration with 'implements' if the class implements an interface
+		content.append("public class ${cls.name}")
+		if (cls.interface) {
+			content.append(" implements ${cls.interface}")
+		}
+		content.append(" {\n\n")
 
 		// Add autowired fields
 		// TODO by Purnima Once IUserInterface is done, add imports as well with autowiring
@@ -158,7 +171,7 @@ class GrabDslGeneratorGroovy {
 			println "Adding autowired field: ${fieldName} of type: ${className}"
 			content.append("    @Autowired\n    private ${className} ${fieldName};")
 		}
-		
+
 		// Add members
 		cls.members?.each { member ->
 			if (member.method) {
@@ -173,6 +186,92 @@ class GrabDslGeneratorGroovy {
 		println "Class file written: ${classFile.absolutePath}"
 	}
 
+	static void generateInterface(InterfaceDefinition interface, File packageDir) {
+		println "Generating interface: ${interface.name} in package: ${packageDir.absolutePath}"
+
+		if (!interface?.name) {
+			println "Interface name is null or empty. Skipping interface generation."
+			return
+		}
+
+		def interfaceFile = new File(packageDir, "${interface.name}.java")
+		def content = new StringBuilder()
+
+		// Use the directory path to determine the package name
+		def packageName = packageDir.absolutePath.replaceAll('^.*src/main/java/', '').replace('/', '.')
+		println "Using package declaration: $packageName"
+		content.append("package $packageName;\n\n")
+
+		// Sets to track imports and autowired fields
+		def imports = new HashSet<String>()
+		def autowiredFields = new HashSet<String>()
+
+		// Add Spring autowired annotation import
+		imports.add("org.springframework.beans.factory.annotation.Autowired")
+		imports.add("org.springframework.web.bind.annotation.RequestMapping")
+		imports.add("org.springframework.web.bind.annotation.RequestMethod.*")
+
+		// Collect necessary imports and autowired fields
+		interface.members.each { member ->
+			if (member.method) {
+				member.method.parameters.each { param ->
+					if (param.type?.toString()?.contains("dto.")) {
+						// Generate fully qualified name for import
+						def type = "com.project.${param.type}"
+						imports.add(type) // Add to imports
+						def fieldName = type.split("\\.").last().uncapitalize()
+						if (!autowiredFields.contains(fieldName)) {
+							autowiredFields.add(fieldName) // Add to autowired fields
+						}
+					}
+				}
+			}
+		}
+
+		// Add imports to the content
+		imports.each { importStatement ->
+			if (!importStatement.equals(packageName)) {
+				// Avoid self-import
+				content.append("import $importStatement;\n")
+			}
+		}
+		content.append("\n")
+
+		// Add interface-level annotations
+		interface.annotations?.each { annotation ->
+			def annotationText = generateAnnotation(annotation)
+			println "Adding annotation: ${annotationText} to interface: ${interface.name}"
+			content.append(annotationText).append("\n")
+		}
+
+		// Add interface declaration with 'implements' if the interface implements an interface
+		content.append("public interface ${interface.name}")
+		if (interface.extend) {
+			content.append(" extends ${interface.extend}")
+		}
+		content.append(" {\n\n")
+
+		// Add autowired fields
+		// TODO by Purnima Once IUserInterface is done, add imports as well with autowiring
+		autowiredFields.each { fieldName ->
+			def interfaceName = fieldName.capitalize() // Extract the class name from the field name
+			println "Adding autowired field: ${fieldName} of type: ${className}"
+			content.append("    @Autowired\n    private ${className} ${fieldName};")
+		}
+
+		// Add members
+		interface.members?.each { member ->
+			if (member.method) {
+				content.append("    ${generateMethod(member.method)}\n")
+			} else if (member.property) {
+				content.append("    ${generateProperty(member.property)}\n")
+			}
+		}
+
+		content.append("}")
+		File.text = content.toString()
+		println "interface file written: ${interfaceFile.absolutePath}"
+	}
 
 
 	static String generateProperty(PropertyDefinition property) {

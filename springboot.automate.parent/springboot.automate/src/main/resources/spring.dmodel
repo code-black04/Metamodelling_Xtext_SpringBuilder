@@ -20,67 +20,63 @@ package com.project {
             @RequestMapping(method = "GET")
             public getUserByUsername(username: String): UsersDto
         }
-
-        @RestController
-        class UsersController1 {
-            @Autowired
-            private usersService: UsersService
-
-            @RequestMapping(method = "POST")
-            public createUsers(userDto: dto.UsersDto): void
-
-            @RequestMapping(method = "PUT")
-            public updateUser(userId: UUID, userDto: dto.UsersDto): void
-
-            @RequestMapping(method = "DELETE")
-            public deleteUser(userId: UUID): void
-
-            @RequestMapping(method = "GET")
-            public getAllUsers(): List<dto.UsersDto>
-
-            @RequestMapping(method = "GET")
-            public getUserByUsername(username: String): dto.UsersDto
-        }
     }
 
     package service {
-        @Service
-        class UsersService {
-
+   
+    @Interface
+        interface IUsersService {
+           
             public createUsers(userDto: UsersDto): void
-
+           
             public updateUser(userId: UUID, userDto: UsersDto): void
-
+           
             public deleteUser(userId: UUID): void
-
+           
             public getAllUsers(): List<UsersDto>
-
+           
+            public getUserByUsername(username: String): UsersDto
+           
+        }
+       
+       
+        @Service
+        class UsersService implements IUserInterface {
+           
+            @Override
+            public createUsers(userDto: UsersDto): void
+           
+            @Override
+            public updateUser(userId: UUID, userDto: UsersDto): void
+           
+            @Override
+            public deleteUser(userId: UUID): void
+           
+            @Override
+            public getAllUsers(): List<UsersDto>
+           
+            @Override
             public getUserByUsername(username: String): UsersDto
         }
+       
     }
-
+   
     package dto {
         @Data
         @NoArgsConstructor
         @AllArgsConstructor
         class UsersDto {
+       
             private id: UUID
+           
             private emailId: String
+           
             private username: String
+           
             private password: String
+           
             private dob: Date
-            private createdAt: Timestamp
-        }
-
-        @Data
-        @NoArgsConstructor
-        @AllArgsConstructor
-        class UsersDto1 {
-            private id: UUID
-            private emailId: String
-            private username: String
-            private password: String
-            private dob: Date
+           
             private createdAt: Timestamp
         }
     }
