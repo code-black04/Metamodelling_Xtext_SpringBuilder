@@ -60,7 +60,7 @@ public class GrabDslParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getPackageDefinitionAccess().getAnnotationsAssignment_0(), "rule__PackageDefinition__AnnotationsAssignment_0");
 			builder.put(grammarAccess.getPackageDefinitionAccess().getPackageNameAssignment_2(), "rule__PackageDefinition__PackageNameAssignment_2");
 			builder.put(grammarAccess.getPackageDefinitionAccess().getClassesAssignment_4(), "rule__PackageDefinition__ClassesAssignment_4");
-			builder.put(grammarAccess.getPackageDefinitionAccess().getInterfaceAssignment_5(), "rule__PackageDefinition__InterfaceAssignment_5");
+			builder.put(grammarAccess.getPackageDefinitionAccess().getInterfacesAssignment_5(), "rule__PackageDefinition__InterfacesAssignment_5");
 			builder.put(grammarAccess.getClassDefinitionAccess().getAnnotationsAssignment_0(), "rule__ClassDefinition__AnnotationsAssignment_0");
 			builder.put(grammarAccess.getClassDefinitionAccess().getNameAssignment_2(), "rule__ClassDefinition__NameAssignment_2");
 			builder.put(grammarAccess.getClassDefinitionAccess().getInterfaceAssignment_3_1(), "rule__ClassDefinition__InterfaceAssignment_3_1");

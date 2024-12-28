@@ -850,9 +850,9 @@ rule__PackageDefinition__Group__5__Impl
 	}
 :
 (
-	{ before(grammarAccess.getPackageDefinitionAccess().getInterfaceAssignment_5()); }
-	(rule__PackageDefinition__InterfaceAssignment_5)*
-	{ after(grammarAccess.getPackageDefinitionAccess().getInterfaceAssignment_5()); }
+	{ before(grammarAccess.getPackageDefinitionAccess().getInterfacesAssignment_5()); }
+	(rule__PackageDefinition__InterfacesAssignment_5)*
+	{ after(grammarAccess.getPackageDefinitionAccess().getInterfacesAssignment_5()); }
 )
 ;
 finally {
@@ -2662,15 +2662,15 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__PackageDefinition__InterfaceAssignment_5
+rule__PackageDefinition__InterfacesAssignment_5
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getPackageDefinitionAccess().getInterfaceInterfaceDefinitionParserRuleCall_5_0()); }
+		{ before(grammarAccess.getPackageDefinitionAccess().getInterfacesInterfaceDefinitionParserRuleCall_5_0()); }
 		ruleInterfaceDefinition
-		{ after(grammarAccess.getPackageDefinitionAccess().getInterfaceInterfaceDefinitionParserRuleCall_5_0()); }
+		{ after(grammarAccess.getPackageDefinitionAccess().getInterfacesInterfaceDefinitionParserRuleCall_5_0()); }
 	)
 ;
 finally {

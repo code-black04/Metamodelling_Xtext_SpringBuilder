@@ -14,7 +14,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//PackageDefinition/annotations"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//PackageDefinition/packageName"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//PackageDefinition/classes"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//PackageDefinition/interface"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//PackageDefinition/interfaces"/>
     </genClasses>
     <genClasses ecoreClass="GrabDsl.ecore#//ClassDefinition">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//ClassDefinition/annotations"/>

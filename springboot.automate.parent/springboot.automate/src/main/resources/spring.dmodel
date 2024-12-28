@@ -23,25 +23,8 @@ package com.project {
     }
 
     package service {
-   
-    @Interface
-        interface IUsersService {
-           
-            public createUsers(userDto: UsersDto): void
-           
-            public updateUser(userId: UUID, userDto: UsersDto): void
-           
-            public deleteUser(userId: UUID): void
-           
-            public getAllUsers(): List<UsersDto>
-           
-            public getUserByUsername(username: String): UsersDto
-           
-        }
-       
-       
         @Service
-        class UsersService implements IUserInterface {
+        class UsersService implements IUsersInterface {
            
             @Override
             public createUsers(userDto: UsersDto): void
@@ -59,6 +42,24 @@ package com.project {
             public getUserByUsername(username: String): UsersDto
         }
        
+    }
+    
+    package serviceInterface {
+    	@Interface
+    	interface IUsersService {
+           
+            public createUsers(userDto: UsersDto): void
+           
+            public updateUser(userId: UUID, userDto: UsersDto): void
+           
+            public deleteUser(userId: UUID): void
+           
+            public getAllUsers(): List<UsersDto>
+           
+            public getUserByUsername(username: String): UsersDto
+           
+        }
+    
     }
    
     package dto {

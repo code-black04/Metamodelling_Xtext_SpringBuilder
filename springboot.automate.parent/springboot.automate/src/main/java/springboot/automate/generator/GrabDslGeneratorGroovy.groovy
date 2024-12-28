@@ -89,18 +89,21 @@ class GrabDslGeneratorGroovy {
 			println "Class ${idx + 1}: ${cls.name} | Annotations: ${cls.annotations?.collect { it.name }}"
 			generateClass(cls, packageDir)
 		}
-		pkg.interface?.eachWithIndex { cls, idx ->
-			// Merge package-level annotations with class-level annotations
-			cls.annotations = (cls.annotations ?: []) + (pkg.annotations ?: [])
-			cls.annotations = cls.annotations.unique { it.name }
-			println "Found class: ${cls.name}"
-			println "Class ${idx + 1}: ${cls.name} | Annotations: ${cls.annotations?.collect { it.name }}"
-			generateClass(cls, packageDir)
+		
+		pkg.interfaces?.eachWithIndex { interfacedef, idx ->
+		    // Merge package-level annotations with interface-level annotations
+		    interfacedef.annotations = (interfacedef.annotations ?: []) + (pkg.annotations ?: [])
+		    interfacedef.annotations = interfacedef.annotations.unique { it.name }
+		    println "Found interface: ${interfacedef.name}"
+		    generateInterface(interfacedef, packageDir) // Correct method for interfaces
 		}
+
 	}
 
 	static void generateClass(ClassDefinition cls, File packageDir) {
-		println "Generating class: ${cls.name} in package: ${packageDir.absolutePath}"
+		
+		def isInterface = false
+ 		println "Generating class: ${cls.name} in package: ${packageDir.absolutePath}"
 
 		if (!cls?.name) {
 			println "Class name is null or empty. Skipping class generation."
@@ -175,7 +178,7 @@ class GrabDslGeneratorGroovy {
 		// Add members
 		cls.members?.each { member ->
 			if (member.method) {
-				content.append("    ${generateMethod(member.method)}\n")
+				content.append("    ${generateMethod(member.method, isInterface)}\n")
 			} else if (member.property) {
 				content.append("    ${generateProperty(member.property)}\n")
 			}
@@ -185,18 +188,57 @@ class GrabDslGeneratorGroovy {
 		classFile.text = content.toString()
 		println "Class file written: ${classFile.absolutePath}"
 	}
+	
+/*	static void generateInterface(InterfaceDefinition interfacedef, File packageDir) {
+		println "Generating interface: ${interfacedef.name} in package: ${packageDir.absolutePath}"
+	
+		if (!interfacedef?.name) {
+			println "Interface name is null or empty. Skipping interface generation."
+			return
+		}
+	
+		def interfaceFile = new File(packageDir, "${interfacedef.name}.java")
+		def content = new StringBuilder()
+	
+		// Use the directory path to determine the package name
+		def packageName = packageDir.absolutePath.replaceAll('^.*src/main/java/', '').replace('/', '.')
+		println "Using package declaration: $packageName"
+		content.append("package $packageName;\n\n")
+	
+		// Add interface-level annotations
+		interfacedef.annotations?.each { annotation ->
+			def annotationText = generateAnnotation(annotation)
+			println "Adding annotation: ${annotationText} to interface: ${interfacedef.name}"
+			content.append(annotationText).append("\n")
+		}
+	
+		// Add interface declaration
+		content.append("public interface ${interfacedef.name} {\n\n")
+	
+		// Add method definitions (but you want to skip this part)
+		interfacedef.methods?.each { method ->
+			content.append("    ${generateMethod(method)}\n")
+		}
+	
+		content.append("}")
+		interfaceFile.text = content.toString()
+		println "Interface file written: ${interfaceFile.absolutePath}"
+	}
+	*/
+	
+	static void generateInterface(InterfaceDefinition interfacedef, File packageDir) {
+		
+		def isInterface = true
+		println "Generating interface: ${interfacedef.name} in package: ${packageDir.absolutePath}"
 
-	static void generateInterface(InterfaceDefinition interface, File packageDir) {
-		println "Generating interface: ${interface.name} in package: ${packageDir.absolutePath}"
-
-		if (!interface?.name) {
+		if (!interfacedef?.name) {
 			println "Interface name is null or empty. Skipping interface generation."
 			return
 		}
 
-		def interfaceFile = new File(packageDir, "${interface.name}.java")
+		def interfaceFile = new File(packageDir, "${interfacedef.name}.java")
 		def content = new StringBuilder()
-
+		
 		// Use the directory path to determine the package name
 		def packageName = packageDir.absolutePath.replaceAll('^.*src/main/java/', '').replace('/', '.')
 		println "Using package declaration: $packageName"
@@ -208,11 +250,10 @@ class GrabDslGeneratorGroovy {
 
 		// Add Spring autowired annotation import
 		imports.add("org.springframework.beans.factory.annotation.Autowired")
-		imports.add("org.springframework.web.bind.annotation.RequestMapping")
-		imports.add("org.springframework.web.bind.annotation.RequestMethod.*")
+		
 
 		// Collect necessary imports and autowired fields
-		interface.members.each { member ->
+		interfacedef.members.each { member ->
 			if (member.method) {
 				member.method.parameters.each { param ->
 					if (param.type?.toString()?.contains("dto.")) {
@@ -238,18 +279,13 @@ class GrabDslGeneratorGroovy {
 		content.append("\n")
 
 		// Add interface-level annotations
-		interface.annotations?.each { annotation ->
+		interfacedef.annotations?.each { annotation ->
 			def annotationText = generateAnnotation(annotation)
-			println "Adding annotation: ${annotationText} to interface: ${interface.name}"
+			println "Adding annotation: ${annotationText} to interface: ${interfacedef.name}"
 			content.append(annotationText).append("\n")
 		}
 
-		// Add interface declaration with 'implements' if the interface implements an interface
-		content.append("public interface ${interface.name}")
-		if (interface.extend) {
-			content.append(" extends ${interface.extend}")
-		}
-		content.append(" {\n\n")
+		content.append("public interface ${interfacedef.name} {\n\n")
 
 		// Add autowired fields
 		// TODO by Purnima Once IUserInterface is done, add imports as well with autowiring
@@ -260,16 +296,16 @@ class GrabDslGeneratorGroovy {
 		}
 
 		// Add members
-		interface.members?.each { member ->
+		interfacedef.members?.each { member ->
 			if (member.method) {
-				content.append("    ${generateMethod(member.method)}\n")
+				content.append("    ${generateMethod(member.method, isInterface)}\n")
 			} else if (member.property) {
 				content.append("    ${generateProperty(member.property)}\n")
 			}
 		}
 
 		content.append("}")
-		File.text = content.toString()
+		interfaceFile.text = content.toString()
 		println "interface file written: ${interfaceFile.absolutePath}"
 	}
 
@@ -296,7 +332,7 @@ class GrabDslGeneratorGroovy {
 
 
 
-	static String generateMethod(MethodDefinition method) {
+	static String generateMethod(MethodDefinition method, boolean isInterface) {
 		println "Processing method: ${method.name}"
 
 		// Safely handle visibility
@@ -315,13 +351,17 @@ class GrabDslGeneratorGroovy {
 		def annotations = method.annotations?.collect { annotation ->
 			if (annotation.name == "RequestMapping") {
 				def methodArg = annotation.arguments.find { it.name == "method" }?.value?.toUpperCase() ?: "GET"
-				return "	@RequestMapping(method = RequestMethod.${methodArg})"
+				return "@RequestMapping(method = RequestMethod.${methodArg})"
 			}
 			generateAnnotation(annotation)
 		}?.join("\n    ") ?: ""
-
-		return "\n${annotations}\n    $visibility $returnType ${method.name}($parameters) {\n        // TODO: Implement method\n    }"
-	}
+		
+		if (!isInterface)
+			return "\n	${annotations}\n    $visibility $returnType ${method.name}($parameters) {\n        // TODO: Implement method\n    }"
+		else
+			return "\n${annotations}\n    $visibility $returnType ${method.name}($parameters);"
+		
+		}
 
 	static String generateAnnotation(Annotation annotation) {
 		def annotationText = "@${annotation.name}"

@@ -2606,20 +2606,20 @@ public class InternalGrabDslParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__PackageDefinition__Group__5__Impl"
-    // InternalGrabDsl.g:847:1: rule__PackageDefinition__Group__5__Impl : ( ( rule__PackageDefinition__InterfaceAssignment_5 )* ) ;
+    // InternalGrabDsl.g:847:1: rule__PackageDefinition__Group__5__Impl : ( ( rule__PackageDefinition__InterfacesAssignment_5 )* ) ;
     public final void rule__PackageDefinition__Group__5__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalGrabDsl.g:851:1: ( ( ( rule__PackageDefinition__InterfaceAssignment_5 )* ) )
-            // InternalGrabDsl.g:852:1: ( ( rule__PackageDefinition__InterfaceAssignment_5 )* )
+            // InternalGrabDsl.g:851:1: ( ( ( rule__PackageDefinition__InterfacesAssignment_5 )* ) )
+            // InternalGrabDsl.g:852:1: ( ( rule__PackageDefinition__InterfacesAssignment_5 )* )
             {
-            // InternalGrabDsl.g:852:1: ( ( rule__PackageDefinition__InterfaceAssignment_5 )* )
-            // InternalGrabDsl.g:853:2: ( rule__PackageDefinition__InterfaceAssignment_5 )*
+            // InternalGrabDsl.g:852:1: ( ( rule__PackageDefinition__InterfacesAssignment_5 )* )
+            // InternalGrabDsl.g:853:2: ( rule__PackageDefinition__InterfacesAssignment_5 )*
             {
-             before(grammarAccess.getPackageDefinitionAccess().getInterfaceAssignment_5()); 
-            // InternalGrabDsl.g:854:2: ( rule__PackageDefinition__InterfaceAssignment_5 )*
+             before(grammarAccess.getPackageDefinitionAccess().getInterfacesAssignment_5()); 
+            // InternalGrabDsl.g:854:2: ( rule__PackageDefinition__InterfacesAssignment_5 )*
             loop8:
             do {
                 int alt8=2;
@@ -2632,10 +2632,10 @@ public class InternalGrabDslParser extends AbstractInternalContentAssistParser {
 
                 switch (alt8) {
             	case 1 :
-            	    // InternalGrabDsl.g:854:3: rule__PackageDefinition__InterfaceAssignment_5
+            	    // InternalGrabDsl.g:854:3: rule__PackageDefinition__InterfacesAssignment_5
             	    {
             	    pushFollow(FOLLOW_11);
-            	    rule__PackageDefinition__InterfaceAssignment_5();
+            	    rule__PackageDefinition__InterfacesAssignment_5();
 
             	    state._fsp--;
 
@@ -2648,7 +2648,7 @@ public class InternalGrabDslParser extends AbstractInternalContentAssistParser {
                 }
             } while (true);
 
-             after(grammarAccess.getPackageDefinitionAccess().getInterfaceAssignment_5()); 
+             after(grammarAccess.getPackageDefinitionAccess().getInterfacesAssignment_5()); 
 
             }
 
@@ -8188,9 +8188,9 @@ public class InternalGrabDslParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__PackageDefinition__ClassesAssignment_4"
 
 
-    // $ANTLR start "rule__PackageDefinition__InterfaceAssignment_5"
-    // InternalGrabDsl.g:2665:1: rule__PackageDefinition__InterfaceAssignment_5 : ( ruleInterfaceDefinition ) ;
-    public final void rule__PackageDefinition__InterfaceAssignment_5() throws RecognitionException {
+    // $ANTLR start "rule__PackageDefinition__InterfacesAssignment_5"
+    // InternalGrabDsl.g:2665:1: rule__PackageDefinition__InterfacesAssignment_5 : ( ruleInterfaceDefinition ) ;
+    public final void rule__PackageDefinition__InterfacesAssignment_5() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -8201,13 +8201,13 @@ public class InternalGrabDslParser extends AbstractInternalContentAssistParser {
             // InternalGrabDsl.g:2670:2: ( ruleInterfaceDefinition )
             // InternalGrabDsl.g:2671:3: ruleInterfaceDefinition
             {
-             before(grammarAccess.getPackageDefinitionAccess().getInterfaceInterfaceDefinitionParserRuleCall_5_0()); 
+             before(grammarAccess.getPackageDefinitionAccess().getInterfacesInterfaceDefinitionParserRuleCall_5_0()); 
             pushFollow(FOLLOW_2);
             ruleInterfaceDefinition();
 
             state._fsp--;
 
-             after(grammarAccess.getPackageDefinitionAccess().getInterfaceInterfaceDefinitionParserRuleCall_5_0()); 
+             after(grammarAccess.getPackageDefinitionAccess().getInterfacesInterfaceDefinitionParserRuleCall_5_0()); 
 
             }
 
@@ -8226,7 +8226,7 @@ public class InternalGrabDslParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__PackageDefinition__InterfaceAssignment_5"
+    // $ANTLR end "rule__PackageDefinition__InterfacesAssignment_5"
 
 
     // $ANTLR start "rule__ClassDefinition__AnnotationsAssignment_0"

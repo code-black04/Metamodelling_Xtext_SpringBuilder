@@ -12,7 +12,7 @@ PackageDefinition:
 	annotations+=Annotation*
     'package' packageName=QualifiedName '{'
         classes+=ClassDefinition*
-        interface+=InterfaceDefinition*
+        interfaces+=InterfaceDefinition*
     '}';
 
 ClassDefinition:
