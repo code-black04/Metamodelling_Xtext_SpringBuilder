@@ -4,10 +4,13 @@ generate grabDsl "http://www.automate.springboot/GrabDsl"
 
 // Entry point for the grammar
 Model:
-    'package' packageName=QualifiedName '{'
-        packages+=PackageDefinition*
-    '}';
+	'package' packageName=QualifiedName '{'
+		pomXml=PomXml
+		packages+=PackageDefinition*
+	
+	'}';
 
+// Existing package definition remains unchanged
 PackageDefinition:
 	annotations+=Annotation*
     'package' packageName=QualifiedName '{'
@@ -15,6 +18,7 @@ PackageDefinition:
         interfaces+=InterfaceDefinition*
     '}';
 
+// Class definitions remain unchanged
 ClassDefinition:
     annotations+=Annotation*
     'class' name=ID 
@@ -31,41 +35,83 @@ InterfaceDefinition:
 
 
 MemberDefinition:
-    (method=MethodDefinition | property=PropertyDefinition);
+	(method=MethodDefinition | property=PropertyDefinition);
 
+// Method definition remains unchanged
 MethodDefinition:
 	annotations+=Annotation*
-    visibility=VisibilityModifier? // Optional visibility
-    name=ID '('
-        (parameters+=ParameterDefinition (',' parameters+=ParameterDefinition)*)? // Parameter list
-    ')'
-    ':' returnType=Type ';'; // Return type
+	visibility=VisibilityModifier? // Optional visibility
+	name=ID '('
+	(parameters+=ParameterDefinition (',' parameters+=ParameterDefinition)*)? // Parameter list
+	')'
+	':' returnType=Type ';'; // Return type
 
+// Property definition remains unchanged
 PropertyDefinition:
 	annotations+=Annotation*
-    visibility=VisibilityModifier? // Optional visibility
-    name=ID ':' type=Type ('=' defaultValue=STRING)?; // Property type
+	visibility=VisibilityModifier? // Optional visibility
+	name=ID ':' type=Type ('=' defaultValue=STRING)?; // Property type
 
+// Parameter definition remains unchanged
 ParameterDefinition:
-    name=ID ':' type=Type ('=' defaultValue=STRING)?;// Parameter name and type
+	name=ID ':' type=Type ('=' defaultValue=STRING)?; // Parameter name and type
 
+// Annotation definition remains unchanged
 Annotation:
-    '@' name=ID ('(' (arguments+=AnnotationArgument (',' arguments+=AnnotationArgument)*)? ')')?;
+	'@' name=ID ('(' (arguments+=AnnotationArgument (',' arguments+=AnnotationArgument)*)? ')')?;
 
 AnnotationArgument:
-    name=ID '=' value=STRING; // Annotation argument as key-value pairs
+	name=ID '=' value=STRING; // Annotation argument as key-value pairs
 
+// Visibility modifier remains unchanged
 VisibilityModifier:
-    'public' | 'private' | 'protected'; // Direct keywords
+	'public' | 'private' | 'protected'; // Direct keywords
 
+// Types (can be primitive or qualified names) remain unchanged
 Type:
-    PrimitiveType | QualifiedName | GenericType; // Types can be primitive or qualified names
+	PrimitiveType | QualifiedName | GenericType;
 
+// Primitive types remain unchanged
 PrimitiveType:
-    'void' | 'String' | 'double' | 'float' | 'int' | 'UUID' | 'Date' | 'Timestamp' | 'List';
+	'void' | 'String' | 'double' | 'float' | 'int' | 'UUID' | 'Date' | 'Timestamp' | 'List';
 
+// Qualified names remain unchanged
 QualifiedName:
-    ID ('.' ID)*; // Fully qualified names (e.g., com.example)
+	ID ('.' ID)*; // Fully qualified names (e.g., com.example)
 
+// Generic types remain unchanged
 GenericType:
-    QualifiedName '<' Type '>';
+	QualifiedName '<' Type '>';
+
+// --------------------
+// New PomXml definition
+// --------------------
+PomXml:
+	'pomXml' '{' 
+		groupId=STRING 
+		artifactId=STRING 
+		version=STRING 
+		packaging=STRING 
+		properties=Properties
+		dependencies=Dependencies 
+	'}';
+
+Properties:
+	'properties' '{' 
+		javaVersion=STRING 
+		springBootVersion=STRING 
+	'}';
+
+Dependencies:
+	'dependencies' '{' 
+		dependencies+=Dependency+ 
+	'}';
+
+Dependency:
+	'dependency' '{' 
+		groupId=STRING 
+		artifactId=STRING 
+		version=STRING 
+		scope=STRING 
+	'}';
+	
