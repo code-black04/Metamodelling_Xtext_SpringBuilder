@@ -189,42 +189,6 @@ class GrabDslGeneratorGroovy {
 		println "Class file written: ${classFile.absolutePath}"
 	}
 	
-/*	static void generateInterface(InterfaceDefinition interfacedef, File packageDir) {
-		println "Generating interface: ${interfacedef.name} in package: ${packageDir.absolutePath}"
-	
-		if (!interfacedef?.name) {
-			println "Interface name is null or empty. Skipping interface generation."
-			return
-		}
-	
-		def interfaceFile = new File(packageDir, "${interfacedef.name}.java")
-		def content = new StringBuilder()
-	
-		// Use the directory path to determine the package name
-		def packageName = packageDir.absolutePath.replaceAll('^.*src/main/java/', '').replace('/', '.')
-		println "Using package declaration: $packageName"
-		content.append("package $packageName;\n\n")
-	
-		// Add interface-level annotations
-		interfacedef.annotations?.each { annotation ->
-			def annotationText = generateAnnotation(annotation)
-			println "Adding annotation: ${annotationText} to interface: ${interfacedef.name}"
-			content.append(annotationText).append("\n")
-		}
-	
-		// Add interface declaration
-		content.append("public interface ${interfacedef.name} {\n\n")
-	
-		// Add method definitions (but you want to skip this part)
-		interfacedef.methods?.each { method ->
-			content.append("    ${generateMethod(method)}\n")
-		}
-	
-		content.append("}")
-		interfaceFile.text = content.toString()
-		println "Interface file written: ${interfaceFile.absolutePath}"
-	}
-	*/
 	
 	static void generateInterface(InterfaceDefinition interfacedef, File packageDir) {
 		
