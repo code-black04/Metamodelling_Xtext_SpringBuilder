@@ -12,13 +12,23 @@ PackageDefinition:
 	annotations+=Annotation*
     'package' packageName=QualifiedName '{'
         classes+=ClassDefinition*
+        interfaces+=InterfaceDefinition*
     '}';
 
 ClassDefinition:
     annotations+=Annotation*
-    'class' name=ID '{'
+    'class' name=ID 
+    ('implements' interface=QualifiedName)? // Implementing an interface
+    '{'
         members+=MemberDefinition*
     '}';
+
+InterfaceDefinition:
+    annotations+=Annotation*
+    'interface' name=ID '{'
+        members+=MemberDefinition*
+    '}';
+
 
 MemberDefinition:
     (method=MethodDefinition | property=PropertyDefinition);
