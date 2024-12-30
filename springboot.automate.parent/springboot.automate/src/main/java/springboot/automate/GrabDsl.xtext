@@ -6,6 +6,7 @@ generate grabDsl "http://www.automate.springboot/GrabDsl"
 Model:
 	'package' packageName=QualifiedName '{'
 		pomXml=PomXml
+		springBootApplication=SpringBootApplication
 		packages+=PackageDefinition*
 	
 	'}';
@@ -82,6 +83,13 @@ QualifiedName:
 // Generic types remain unchanged
 GenericType:
 	QualifiedName '<' Type '>';
+	
+SpringBootApplication:
+    'springBootApplication' '{'
+        'name' '=' name=ID
+        'packageName' '=' packageName=QualifiedName
+        'annotations' '=' '[' annotations+=STRING (',' annotations+=STRING)* ']'
+    '}';
 
 // --------------------
 // New PomXml definition
@@ -137,5 +145,6 @@ Configuration:
             'target' '=' target=STRING
         '}'
 ;
+    
     
     

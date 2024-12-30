@@ -55,14 +55,49 @@ class GrabDslGeneratorGroovy {
 		if (model.pomXml) {
 			generatePomXml(model.pomXml, projectBase)
 		}
+		
+		// Generate the Spring Boot main application file
+		generateSpringBootApplication(model.packageName, mainJavaDir)
 
 		// Process the packages in the model
 		model.packages.each { pkg ->
-//			generatePackage(pkg, mainJavaDir, model.packageName.toString())
+			generatePackage(pkg, mainJavaDir, model.packageName.toString())
 		}
 
 		// Write application.properties file
 		new File(mainResourcesDir, "application.properties").text = "# Spring Boot Application Properties\n"
+	}
+	
+	static void generateSpringBootApplication(String packageName, File mainJavaDir) {
+		def appPackageDir = new File(mainJavaDir, packageName.replace('.', '/'))
+		appPackageDir.mkdirs()
+
+		def appFile = new File(appPackageDir, "SpringBootApplication.java")
+		def content = new StringBuilder()
+
+		// Add package declaration
+		content.append("package ${packageName};\n\n")
+
+		// Add imports
+		content.append("""
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+""")
+
+		// Add @SpringBootApplication annotation
+		content.append("""
+@SpringBootApplication
+public class SpringBootApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(SpringBootApplication.class, args);
+    }
+}
+""")
+
+		// Write to the file
+		appFile.text = content.toString()
+		println "SpringBootApplication.java file generated at: ${appFile.absolutePath}"
 	}
 	
 	static void generatePomXml(PomXml pomXml, File projectBase) {

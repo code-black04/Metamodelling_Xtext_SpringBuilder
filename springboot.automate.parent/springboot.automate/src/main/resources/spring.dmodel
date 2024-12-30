@@ -46,6 +46,12 @@ package com.project {
         }
     }
     
+    springBootApplication {
+        name = "SpringBootApplication"
+        packageName = "com.project"
+        annotations = ["@SpringBootApplication"]
+    }
+    
     package controller {
         @RestController(path="\\api")
         class UsersController {
