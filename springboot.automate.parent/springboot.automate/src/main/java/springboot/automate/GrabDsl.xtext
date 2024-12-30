@@ -87,33 +87,55 @@ GenericType:
 // New PomXml definition
 // --------------------
 PomXml:
-    'pomXml' '{' 
-        groupId=Assignment
-        artifactId=Assignment
-        version=Assignment
-        packaging=Assignment
+    'pomXml' '{'
+        'groupId' '=' groupId=STRING
+        'artifactId' '=' artifactId=STRING
+        'version' '=' version=STRING
+        'packaging' '=' packaging=STRING
         properties=Properties
-        dependencies=Dependencies 
+        dependencies=Dependencies
+        build=Build
     '}';
 
 Properties:
-    'properties' '{' 
-        javaVersion=Assignment
-        springBootVersion=Assignment
+    'properties' '{'
+        'javaVersion' '=' javaVersion=STRING
+        'springBootVersion' '=' springBootVersion=STRING
     '}';
 
 Dependencies:
-    'dependencies' '{' 
-        dependencies+=Dependency+
+    {Dependencies} 'dependencies' '{'
+        dependencies+=Dependency*
     '}';
 
 Dependency:
-    'dependency' '{' 
-        groupId=Assignment
-        artifactId=Assignment
-        version=Assignment
-        scope=Assignment
+    'dependency' '{'
+        'groupId' '=' groupId=STRING
+        'artifactId' '=' artifactId=STRING
+        'version' '=' version=STRING
+        'scope' '=' scope=STRING
     '}';
 
-Assignment:
-    ID '=' STRING;
+Build:
+    {Build} 'build' '{'
+        'plugins' '{'
+            plugins+=Plugin*
+        '}'
+    '}';
+
+Plugin:
+    'plugin' '{'
+        'groupId' '=' groupId=STRING
+        'artifactId' '=' artifactId=STRING
+        'version' '=' version=STRING
+        configuration=Configuration
+    '}';
+    
+Configuration:
+	'configuration' '{'
+            'source' '=' source=STRING
+            'target' '=' target=STRING
+        '}'
+;
+    
+    

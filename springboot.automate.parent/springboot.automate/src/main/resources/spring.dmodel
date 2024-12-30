@@ -30,6 +30,20 @@ package com.project {
                 scope = "test"
             }
         }
+        
+        build {
+            plugins {
+                plugin {
+                    groupId = "org.apache.maven.plugins"
+                    artifactId = "maven-compiler-plugin"
+                    version = "3.8.1"
+                    configuration {
+                        source = "${java.version}"
+                        target = "${java.version}"
+                    }
+                }
+            }
+        }
     }
     
     package controller {

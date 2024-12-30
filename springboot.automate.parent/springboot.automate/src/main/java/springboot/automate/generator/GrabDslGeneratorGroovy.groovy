@@ -58,7 +58,7 @@ class GrabDslGeneratorGroovy {
 
 		// Process the packages in the model
 		model.packages.each { pkg ->
-			generatePackage(pkg, mainJavaDir, model.packageName.toString())
+//			generatePackage(pkg, mainJavaDir, model.packageName.toString())
 		}
 
 		// Write application.properties file
@@ -71,67 +71,84 @@ class GrabDslGeneratorGroovy {
 	    def pomFile = new File(projectBase, "pom.xml")
 	    def content = new StringBuilder()
 	
-	    // Function to clean up property values
-	    def cleanValue = { value ->
-	        value?.replaceFirst(/.*= "/, "").replaceFirst(/"$/, "")
-	    }
-	
-	    // Basic XML structure for the pom.xml
+	    // Add the XML declaration and root element
 	    content.append("""<?xml version="1.0" encoding="UTF-8"?>
 	<project xmlns="http://maven.apache.org/POM/4.0.0"
 	         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	    <modelVersion>4.0.0</modelVersion>
 	
-	    <groupId>${cleanValue(pomXml.groupId)}</groupId>
-	    <artifactId>${cleanValue(pomXml.artifactId)}</artifactId>
-	    <version>${cleanValue(pomXml.version)}</version>
-	    <packaging>${cleanValue(pomXml.packaging)}</packaging>
+	    <groupId>${pomXml.groupId}</groupId>
+	    <artifactId>${pomXml.artifactId}</artifactId>
+	    <version>${pomXml.version}</version>
+	    <packaging>${pomXml.packaging}</packaging>
 	
-		<properties>
+	    <properties>
+	        <java.version>${pomXml.properties?.javaVersion ?: "1.8"}</java.version>
+	        <spring.boot.version>${pomXml.properties?.springBootVersion ?: "2.7.5"}</spring.boot.version>
+	    </properties>
+	
+	    <dependencies>
 	""")
 	
-	    // Adding properties
-	    if (pomXml.properties) {
-	        if (pomXml.properties.javaVersion) {
-	            content.append("			<java.version>${cleanValue(pomXml.properties.javaVersion)}</java.version>\n")
-	        }
-	        if (pomXml.properties.springBootVersion) {
-	            content.append("			<spring.boot.version>${cleanValue(pomXml.properties.springBootVersion)}</spring.boot.version>\n")
-	        }
-	    }
-	
-	    content.append("		</properties>\n")
-	
-	    // Adding dependencies
-	    content.append("    	<dependencies>\n")
-	
+	    // Add dependencies
 	    pomXml.dependencies.dependencies.each { dependency ->
-	        content.append("        	<dependency>\n")
-	        
-	        if (dependency.groupId) {
-	            content.append("            	<groupId>${cleanValue(dependency.groupId)}</groupId>\n")
-	        }
-	        if (dependency.artifactId) {
-	            content.append("            	<artifactId>${cleanValue(dependency.artifactId)}</artifactId>\n")
-	        }
-	        if (dependency.version) {
-	            content.append("            	<version>${cleanValue(dependency.version)}</version>\n")
-	        }
-	        if (dependency.scope) {
-	            content.append("            	<scope>${cleanValue(dependency.scope)}</scope>\n")
-	        }
-	        
-	        content.append("        	</dependency>\n")
+	        content.append("""
+	        <dependency>
+	            <groupId>${dependency.groupId}</groupId>
+	            <artifactId>${dependency.artifactId}</artifactId>
+	            <version>${dependency.version}</version>
+	            ${dependency.scope ? "<scope>${dependency.scope}</scope>" : ""}
+	        </dependency>
+	""")
 	    }
-	    content.append("    	</dependencies>\n")
 	
-	    content.append("	</project>")
+	    content.append("""
+	    </dependencies>
+	""")
 	
-	    // Write to pom.xml
+	    // Add build plugins if specified
+	    if (pomXml.build?.plugins) {
+	        content.append("""
+	    <build>
+	        <plugins>
+	""")
+	        pomXml.build.plugins.each { plugin ->
+	            content.append("""
+	            <plugin>
+	                <groupId>${plugin.groupId}</groupId>
+	                <artifactId>${plugin.artifactId}</artifactId>
+	                <version>${plugin.version}</version>
+	                <configuration>
+						<source>${plugin.configuration.source}</source>
+						<target>${plugin.configuration.target}</target>
+	                </configuration>
+	            </plugin>
+	""")
+	        }
+	        content.append("""
+	        </plugins>
+	    </build>
+	""")
+	    }
+	
+	    // Close the root element
+	    content.append("</project>")
+	
+	    // Write content to the pom.xml file
 	    pomFile.text = content.toString()
 	    println "pom.xml file written: ${pomFile.absolutePath}"
 	}
+	
+// ${plugin.configuration ? formatPluginConfiguration(plugin.configuration) : ""}
+//	static String formatPluginConfiguration(def configuration) {
+//	    def configContent = new StringBuilder("<configuration>\n")
+//	    configuration.each { config ->
+//	        configContent.append("    <${config.name}>${config.value}</${config.name}>\n")
+//	    }
+//	    configContent.append("</configuration>")
+//	    return configContent.toString()
+//	}
 
 	static void generatePackage(PackageDefinition pkg, File baseDir, String parentPackageName) {
         def packageName = pkg.packageName?.toString()
