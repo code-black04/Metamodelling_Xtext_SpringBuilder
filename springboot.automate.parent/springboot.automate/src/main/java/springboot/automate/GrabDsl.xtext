@@ -87,31 +87,33 @@ GenericType:
 // New PomXml definition
 // --------------------
 PomXml:
-	'pomXml' '{' 
-		groupId=STRING 
-		artifactId=STRING 
-		version=STRING 
-		packaging=STRING 
-		properties=Properties
-		dependencies=Dependencies 
-	'}';
+    'pomXml' '{' 
+        groupId=Assignment
+        artifactId=Assignment
+        version=Assignment
+        packaging=Assignment
+        properties=Properties
+        dependencies=Dependencies 
+    '}';
 
 Properties:
-	'properties' '{' 
-		javaVersion=STRING 
-		springBootVersion=STRING 
-	'}';
+    'properties' '{' 
+        javaVersion=Assignment
+        springBootVersion=Assignment
+    '}';
 
 Dependencies:
-	'dependencies' '{' 
-		dependencies+=Dependency+ 
-	'}';
+    'dependencies' '{' 
+        dependencies+=Dependency+
+    '}';
 
 Dependency:
-	'dependency' '{' 
-		groupId=STRING 
-		artifactId=STRING 
-		version=STRING 
-		scope=STRING 
-	'}';
-	
+    'dependency' '{' 
+        groupId=Assignment
+        artifactId=Assignment
+        version=Assignment
+        scope=Assignment
+    '}';
+
+Assignment:
+    ID '=' STRING;

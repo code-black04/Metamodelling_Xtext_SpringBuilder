@@ -53,7 +53,7 @@ class GrabDslGeneratorGroovy {
 		testJavaDir.mkdirs()
 		
 		if (model.pomXml) {
-			generatePomXml(model.pomXmlModel, mainResourcesDir)
+			generatePomXml(model.pomXml, projectBase)
 		}
 
 		// Process the packages in the model
@@ -65,54 +65,72 @@ class GrabDslGeneratorGroovy {
 		new File(mainResourcesDir, "application.properties").text = "# Spring Boot Application Properties\n"
 	}
 	
-	static void generatePomXml(PomXml pomXml, File resourcesDir) {
-		println "Generating pom.xml"
-
-		def pomFile = new File(resourcesDir, "pom.xml")
-		def content = new StringBuilder()
-
-		// Basic XML structure for the pom.xml
-		content.append("""<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-
-    <groupId>${pomXml.groupId}</groupId>
-    <artifactId>${pomXml.artifactId}</artifactId>
-    <version>${pomXml.version}</version>
-    <packaging>${pomXml.packaging}</packaging>
-
-    <properties>
-""")
-
-		// Add properties section
-		pomXml.properties.each { property ->
-			content.append("        <${property.key}>${property.value}</${property.key}>\n")
-		}
-
-		content.append("    </properties>\n")
-
-		// Add dependencies section
-		content.append("    <dependencies>\n")
-		pomXml.dependencies.each { dependency ->
-			content.append("        <dependency>\n")
-			content.append("            <groupId>${dependency.groupId}</groupId>\n")
-			content.append("            <artifactId>${dependency.artifactId}</artifactId>\n")
-			content.append("            <version>${dependency.version}</version>\n")
-			if (dependency.scope) {
-				content.append("            <scope>${dependency.scope}</scope>\n")
-			}
-			content.append("        </dependency>\n")
-		}
-		content.append("    </dependencies>\n")
-
-		content.append("</project>")
-
-		// Write the pom.xml file to disk
-		pomFile.text = content.toString()
-		println "pom.xml file written: ${pomFile.absolutePath}"
+	static void generatePomXml(PomXml pomXml, File projectBase) {
+	    println "Generating pom.xml"
+	
+	    def pomFile = new File(projectBase, "pom.xml")
+	    def content = new StringBuilder()
+	
+	    // Basic XML structure for the pom.xml
+	    content.append("""<?xml version="1.0" encoding="UTF-8"?>
+	<project xmlns="http://maven.apache.org/POM/4.0.0"
+	         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	    <modelVersion>4.0.0</modelVersion>
+	
+	    <groupId>${pomXml.groupId}</groupId>
+	    <artifactId>${pomXml.artifactId}</artifactId>
+	    <version>${pomXml.version}</version>
+	    <packaging>${pomXml.packaging}</packaging>
+	
+	    <properties>
+	""")
+	
+	    // Adding properties
+	    if (pomXml.properties) {
+	        if (pomXml.properties.javaVersion) {
+	            content.append("        <java.version>${pomXml.properties.javaVersion}</java.version>\n")
+	        }
+	        if (pomXml.properties.springBootVersion) {
+	            content.append("        <spring.boot.version>${pomXml.properties.springBootVersion}</spring.boot.version>\n")
+	        }
+	    }
+	
+	    content.append("    </properties>\n")
+	
+	    // Adding dependencies
+	    content.append("    <dependencies>\n")
+		
+	    pomXml.dependencies.dependencies.each { dependency ->
+	        content.append("        <dependency>\n")
+	        
+	        // Replace with actual methods/fields for DependenciesImpl
+	        if (dependency.groupId) {
+	            content.append("            <groupId>${dependency.groupId}</groupId>\n")
+	        }
+	        if (dependency.artifactId) {
+	            content.append("            <artifactId>${dependency.artifactId}</artifactId>\n")
+	        }
+	        if (dependency.version) {
+	            content.append("            <version>${dependency.version}</version>\n")
+	        }
+	        if (dependency.scope) {
+	            content.append("            <scope>${dependency.scope}</scope>\n")
+	        }
+	        
+	        content.append("        </dependency>\n")
+	    }
+	    content.append("    </dependencies>\n")
+	
+	    content.append("</project>")
+	
+	    // Write to pom.xml
+	    pomFile.text = content.toString()
+	    println "pom.xml file written: ${pomFile.absolutePath}"
 	}
+
+
+
 
 	static void generatePackage(PackageDefinition pkg, File baseDir, String parentPackageName) {
         def packageName = pkg.packageName?.toString()
