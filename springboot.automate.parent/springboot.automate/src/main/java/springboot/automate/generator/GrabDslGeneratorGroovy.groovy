@@ -71,6 +71,11 @@ class GrabDslGeneratorGroovy {
 	    def pomFile = new File(projectBase, "pom.xml")
 	    def content = new StringBuilder()
 	
+	    // Function to clean up property values
+	    def cleanValue = { value ->
+	        value?.replaceFirst(/.*= "/, "").replaceFirst(/"$/, "")
+	    }
+	
 	    // Basic XML structure for the pom.xml
 	    content.append("""<?xml version="1.0" encoding="UTF-8"?>
 	<project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -78,59 +83,55 @@ class GrabDslGeneratorGroovy {
 	         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	    <modelVersion>4.0.0</modelVersion>
 	
-	    <groupId>${pomXml.groupId}</groupId>
-	    <artifactId>${pomXml.artifactId}</artifactId>
-	    <version>${pomXml.version}</version>
-	    <packaging>${pomXml.packaging}</packaging>
+	    <groupId>${cleanValue(pomXml.groupId)}</groupId>
+	    <artifactId>${cleanValue(pomXml.artifactId)}</artifactId>
+	    <version>${cleanValue(pomXml.version)}</version>
+	    <packaging>${cleanValue(pomXml.packaging)}</packaging>
 	
-	    <properties>
+		<properties>
 	""")
 	
 	    // Adding properties
 	    if (pomXml.properties) {
 	        if (pomXml.properties.javaVersion) {
-	            content.append("        <java.version>${pomXml.properties.javaVersion}</java.version>\n")
+	            content.append("			<java.version>${cleanValue(pomXml.properties.javaVersion)}</java.version>\n")
 	        }
 	        if (pomXml.properties.springBootVersion) {
-	            content.append("        <spring.boot.version>${pomXml.properties.springBootVersion}</spring.boot.version>\n")
+	            content.append("			<spring.boot.version>${cleanValue(pomXml.properties.springBootVersion)}</spring.boot.version>\n")
 	        }
 	    }
 	
-	    content.append("    </properties>\n")
+	    content.append("		</properties>\n")
 	
 	    // Adding dependencies
-	    content.append("    <dependencies>\n")
-		
+	    content.append("    	<dependencies>\n")
+	
 	    pomXml.dependencies.dependencies.each { dependency ->
-	        content.append("        <dependency>\n")
+	        content.append("        	<dependency>\n")
 	        
-	        // Replace with actual methods/fields for DependenciesImpl
 	        if (dependency.groupId) {
-	            content.append("            <groupId>${dependency.groupId}</groupId>\n")
+	            content.append("            	<groupId>${cleanValue(dependency.groupId)}</groupId>\n")
 	        }
 	        if (dependency.artifactId) {
-	            content.append("            <artifactId>${dependency.artifactId}</artifactId>\n")
+	            content.append("            	<artifactId>${cleanValue(dependency.artifactId)}</artifactId>\n")
 	        }
 	        if (dependency.version) {
-	            content.append("            <version>${dependency.version}</version>\n")
+	            content.append("            	<version>${cleanValue(dependency.version)}</version>\n")
 	        }
 	        if (dependency.scope) {
-	            content.append("            <scope>${dependency.scope}</scope>\n")
+	            content.append("            	<scope>${cleanValue(dependency.scope)}</scope>\n")
 	        }
 	        
-	        content.append("        </dependency>\n")
+	        content.append("        	</dependency>\n")
 	    }
-	    content.append("    </dependencies>\n")
+	    content.append("    	</dependencies>\n")
 	
-	    content.append("</project>")
+	    content.append("	</project>")
 	
 	    // Write to pom.xml
 	    pomFile.text = content.toString()
 	    println "pom.xml file written: ${pomFile.absolutePath}"
 	}
-
-
-
 
 	static void generatePackage(PackageDefinition pkg, File baseDir, String parentPackageName) {
         def packageName = pkg.packageName?.toString()
