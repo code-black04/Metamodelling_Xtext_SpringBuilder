@@ -36,7 +36,6 @@ InterfaceDefinition:
         members+=MemberDefinition*
     '}';
 
-
 MemberDefinition:
 	(method=MethodDefinition | property=PropertyDefinition);
 
@@ -57,14 +56,14 @@ PropertyDefinition:
 
 // Parameter definition remains unchanged
 ParameterDefinition:
-	name=ID ':' type=Type ('=' defaultValue=STRING)?; // Parameter name and type
+    name=ID ':' type=Type ('=' defaultValue=STRING)?; // Parameter name and type
 
 // Annotation definition remains unchanged
 Annotation:
 	'@' name=ID ('(' (arguments+=AnnotationArgument (',' arguments+=AnnotationArgument)*)? ')')?;
 
 AnnotationArgument:
-	name=ID '=' value=STRING; // Annotation argument as key-value pairs
+    name=ID '=' value=(STRING | BooleanLiteral | QualifiedName); // Annotation argument values
 
 // Visibility modifier remains unchanged
 VisibilityModifier:
@@ -85,10 +84,12 @@ QualifiedName:
 // Generic types remain unchanged
 GenericType:
 	(QualifiedName | PrimitiveType) '<' Type '>';
-    
+
 EntityType:
-	'<' entity=Type ',' key=Type '>'
-;
+	'<' entity=Type ',' key=Type '>';
+	
+BooleanLiteral:
+    'true' | 'false';
 	
 SpringBootApplication:
     'springBootApplication' '{'

@@ -248,10 +248,14 @@ public class SpringBootApplication {
 		def autowiredFields = new HashSet<String>()
 
 		// Add Spring autowired annotation import
-		imports.add("org.springframework.beans.factory.annotation.Autowired")
-		imports.add("org.springframework.web.bind.annotation.RequestMapping")
-		imports.add("org.springframework.web.bind.annotation.RequestMethod.*")
-
+		if (packageName.contains("entity")) {
+			imports.add("javax.persistence.*")
+		} else {
+			imports.add("org.springframework.beans.factory.annotation.Autowired")
+			imports.add("org.springframework.web.bind.annotation.RequestMapping")
+			imports.add("org.springframework.web.bind.annotation.RequestMethod.*")
+		}
+		
 		// Collect necessary imports and autowired fields
 		cls.members.each { member ->
 			if (member.method) {
