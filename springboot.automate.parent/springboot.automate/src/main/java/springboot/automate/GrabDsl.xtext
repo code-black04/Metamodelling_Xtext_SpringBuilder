@@ -13,7 +13,7 @@ Model:
 
 // Existing package definition remains unchanged
 PackageDefinition:
-	annotations+=Annotation*
+    annotations+=Annotation*
     'package' packageName=QualifiedName '{'
         classes+=ClassDefinition*
         interfaces+=InterfaceDefinition*
@@ -30,22 +30,23 @@ ClassDefinition:
 
 InterfaceDefinition:
     annotations+=Annotation*
-    'interface' name=ID '{'
+    'interface' name=ID 
+    ('extends' interface=EntityType)? // Implementing an interface
+    '{'
         members+=MemberDefinition*
     '}';
-
 
 MemberDefinition:
 	(method=MethodDefinition | property=PropertyDefinition);
 
 // Method definition remains unchanged
 MethodDefinition:
-	annotations+=Annotation*
-	visibility=VisibilityModifier? // Optional visibility
-	name=ID '('
-	(parameters+=ParameterDefinition (',' parameters+=ParameterDefinition)*)? // Parameter list
-	')'
-	':' returnType=Type ';'; // Return type
+    annotations+=Annotation*
+    visibility=VisibilityModifier? // Optional visibility
+    name=ID '('
+        (parameters+=ParameterDefinition (',' parameters+=ParameterDefinition)*)? // Parameter list
+    ')'
+    ':' returnType=Type ';'; // Return type
 
 // Property definition remains unchanged
 PropertyDefinition:
@@ -55,14 +56,17 @@ PropertyDefinition:
 
 // Parameter definition remains unchanged
 ParameterDefinition:
-	name=ID ':' type=Type ('=' defaultValue=STRING)?; // Parameter name and type
+    name=ID ':' type=Type ('=' defaultValue=STRING)?; // Parameter name and type
 
 // Annotation definition remains unchanged
 Annotation:
 	'@' name=ID ('(' (arguments+=AnnotationArgument (',' arguments+=AnnotationArgument)*)? ')')?;
 
 AnnotationArgument:
-	name=ID '=' value=STRING; // Annotation argument as key-value pairs
+    name=ID '=' value=(STRING | BooleanLiteral | QualifiedName);
+
+BooleanLiteral:
+    'true' | 'false';
 
 // Visibility modifier remains unchanged
 VisibilityModifier:
@@ -74,7 +78,7 @@ Type:
 
 // Primitive types remain unchanged
 PrimitiveType:
-	'void' | 'String' | 'double' | 'float' | 'int' | 'UUID' | 'Date' | 'Timestamp' | 'List';
+    'void' | 'String' | 'double' | 'float' | 'int' | 'UUID' | 'Date' | 'Timestamp' | 'List' | 'Optional';
 
 // Qualified names remain unchanged
 QualifiedName:
@@ -82,7 +86,13 @@ QualifiedName:
 
 // Generic types remain unchanged
 GenericType:
-	QualifiedName '<' Type '>';
+	(QualifiedName | PrimitiveType) '<' Type '>';
+
+EntityType:
+	'<' entity=Type ',' key=Type '>';
+	
+BooleanLiteral:
+    'true' | 'false';
 	
 SpringBootApplication:
     'springBootApplication' '{'
