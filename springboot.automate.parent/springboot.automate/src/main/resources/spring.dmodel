@@ -45,14 +45,8 @@ package com.project {
             }
         }
     }
-    
-    springBootApplication {
-        name = "SpringBootApplication"
-        packageName = "com.project"
-        annotations = ["@SpringBootApplication"]
-    }
-    
-    package controller {
+
+	package controller {
         @RestController(path="\\api")
         class UsersController {
             @Autowired
@@ -149,42 +143,42 @@ package com.project {
     }
     
     package entity {
-    	@Entity
-        @Table(name="tweets")
-        class TweetEntity {
-            @Id
-            @GeneratedValue(strategy="UUID")
-            private id: UUID
-
-            @ManyToOne
-            @JoinColumn(name="user_id", nullable=false)
-            private user: UsersEntity
-        }
-        
-        @Entity
-        @Table(name="users")
-        class UsersEntity {
-            @Id
-            @GeneratedValue(strategy="UUID")
-            private id: UUID
-
-            @Column(name="email_id")
-            private emailId: String
-            
-            @Column(name="username")
-            private username: String
-            
-            @Column(name="password")
-            private password: String
-            
-            @Column(name="dob")
-            private dob: Date
-            
-            @Column(name="created_at")
-            private createdAt: Timestamp
-
-            @OneToMany(mappedBy="user", cascade=CascadeType.ALL, orphanRemoval=true)
-            private orders: List<TweetEntity>
-        }
-    }
+	    @Entity
+	    @Table(name="tweets")
+	    class TweetEntity {
+	        @Id
+	        @GeneratedValue(strategy="UUID")
+	        private id: UUID
+	
+	        @ManyToOne
+	        @JoinColumn(name="user_id", nullable=false)
+	        private user: UsersEntity
+	    }
+	    
+	    @Entity
+	    @Table(name="users")
+	    class UsersEntity {
+	        @Id
+	        @GeneratedValue(strategy="UUID")
+	        private id: UUID
+	
+	        @Column(name="email_id")
+	        private emailId: String
+	        
+	        @Column(name="username")
+	        private username: String
+	        
+	        @Column(name="password")
+	        private password: String
+	        
+	        @Column(name="dob")
+	        private dob: Date
+	        
+	        @Column(name="created_at")
+	        private createdAt: Timestamp
+	
+	        @OneToMany(mappedBy="user", cascade=CascadeType.ALL, orphanRemoval=true)
+	        private orders: List<TweetEntity>
+	    }
+	}
 }
