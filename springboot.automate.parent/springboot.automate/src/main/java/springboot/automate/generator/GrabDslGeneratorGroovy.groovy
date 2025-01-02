@@ -57,9 +57,7 @@ class GrabDslGeneratorGroovy {
 		}
 		
 		// Generate the Spring Boot main application file
-//		if (model.springBootApplication) {
-//			generateSpringBootApplication(model.packageName, mainJavaDir)
-//		}
+		generateSpringBootApplication(model.packageName, mainJavaDir)
 
 		// Process the packages in the model
 		model.packages.each { pkg ->
