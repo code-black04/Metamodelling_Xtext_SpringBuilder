@@ -15,6 +15,7 @@ import java.lang.reflect.Method
 import springboot.automate.GrabDslStandaloneSetup
 import springboot.automate.grabDsl.Model
 import springboot.automate.grabDsl.PackageDefinition
+import springboot.automate.grabDsl.PomXml
 import springboot.automate.grabDsl.Annotation
 import springboot.automate.grabDsl.ClassDefinition
 import springboot.automate.grabDsl.InterfaceDefinition
@@ -50,6 +51,13 @@ class GrabDslGeneratorGroovy {
 		mainJavaDir.mkdirs()
 		mainResourcesDir.mkdirs()
 		testJavaDir.mkdirs()
+		
+		if (model.pomXml) {
+			generatePomXml(model.pomXml, projectBase)
+		}
+		
+		// Generate the Spring Boot main application file
+		generateSpringBootApplication(model.packageName, mainJavaDir)
 
 		// Process the packages in the model
 		model.packages.each { pkg ->
@@ -59,27 +67,144 @@ class GrabDslGeneratorGroovy {
 		// Write application.properties file
 		new File(mainResourcesDir, "application.properties").text = "# Spring Boot Application Properties\n"
 	}
+	
+	static void generateSpringBootApplication(String packageName, File mainJavaDir) {
+		def appPackageDir = new File(mainJavaDir, packageName.replace('.', '/'))
+		appPackageDir.mkdirs()
+
+		def appFile = new File(appPackageDir, "SpringBootApplication.java")
+		def content = new StringBuilder()
+
+		// Add package declaration
+		content.append("package ${packageName};\n\n")
+
+		// Add imports
+		content.append("""
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+""")
+
+		// Add @SpringBootApplication annotation
+		content.append("""
+@SpringBootApplication
+public class SpringBootApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(SpringBootApplication.class, args);
+    }
+}
+""")
+
+		// Write to the file
+		appFile.text = content.toString()
+		println "SpringBootApplication.java file generated at: ${appFile.absolutePath}"
+	}
+	
+	static void generatePomXml(PomXml pomXml, File projectBase) {
+	    println "Generating pom.xml"
+	
+	    def pomFile = new File(projectBase, "pom.xml")
+	    def content = new StringBuilder()
+	
+	    // Add the XML declaration and root element
+	    content.append("""<?xml version="1.0" encoding="UTF-8"?>
+	<project xmlns="http://maven.apache.org/POM/4.0.0"
+	         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	    <modelVersion>4.0.0</modelVersion>
+	
+	    <groupId>${pomXml.groupId}</groupId>
+	    <artifactId>${pomXml.artifactId}</artifactId>
+	    <version>${pomXml.version}</version>
+	    <packaging>${pomXml.packaging}</packaging>
+	
+	    <properties>
+	        <java.version>${pomXml.properties?.javaVersion ?: "1.8"}</java.version>
+	        <spring.boot.version>${pomXml.properties?.springBootVersion ?: "2.7.5"}</spring.boot.version>
+	    </properties>
+	
+	    <dependencies>
+	""")
+	
+	    // Add dependencies
+	    pomXml.dependencies.dependencies.each { dependency ->
+	        content.append("""
+	        <dependency>
+	            <groupId>${dependency.groupId}</groupId>
+	            <artifactId>${dependency.artifactId}</artifactId>
+	            <version>${dependency.version}</version>
+	            ${dependency.scope ? "<scope>${dependency.scope}</scope>" : ""}
+	        </dependency>
+	""")
+	    }
+	
+	    content.append("""
+	    </dependencies>
+	""")
+	
+	    // Add build plugins if specified
+	    if (pomXml.build?.plugins) {
+	        content.append("""
+	    <build>
+	        <plugins>
+	""")
+	        pomXml.build.plugins.each { plugin ->
+	            content.append("""
+	            <plugin>
+	                <groupId>${plugin.groupId}</groupId>
+	                <artifactId>${plugin.artifactId}</artifactId>
+	                <version>${plugin.version}</version>
+	                <configuration>
+						<source>${plugin.configuration.source}</source>
+						<target>${plugin.configuration.target}</target>
+	                </configuration>
+	            </plugin>
+	""")
+	        }
+	        content.append("""
+	        </plugins>
+	    </build>
+	""")
+	    }
+	
+	    // Close the root element
+	    content.append("</project>")
+	
+	    // Write content to the pom.xml file
+	    pomFile.text = content.toString()
+	    println "pom.xml file written: ${pomFile.absolutePath}"
+	}
+	
+// ${plugin.configuration ? formatPluginConfiguration(plugin.configuration) : ""}
+//	static String formatPluginConfiguration(def configuration) {
+//	    def configContent = new StringBuilder("<configuration>\n")
+//	    configuration.each { config ->
+//	        configContent.append("    <${config.name}>${config.value}</${config.name}>\n")
+//	    }
+//	    configContent.append("</configuration>")
+//	    return configContent.toString()
+//	}
 
 	static void generatePackage(PackageDefinition pkg, File baseDir, String parentPackageName) {
-		def packageName = pkg.packageName?.toString()
-		println "Processing package: $packageName"
+        def packageName = pkg.packageName?.toString()
+        println "Processing package: $packageName"
 
-		if (parentPackageName) {
-			packageName = "${parentPackageName}.${packageName}"
-		}
-		println "Processing package: $packageName"
+        if (parentPackageName) {
+            packageName = "${parentPackageName}.${packageName}"
+        }
+        println "Processing package: $packageName"
 
-		if (!packageName) {
-			println "Package name is null or empty. Skipping package generation."
-			return
-		}
+        if (!packageName) {
+            println "Package name is null or empty. Skipping package generation."
+            return
+        }
 
-		def packageDir = new File(baseDir, packageName.replace('.', '/'))
-		if (packageDir.mkdirs()) {
-			println "Package directory created at: ${packageDir.absolutePath}"
-		} else {
-			println "Package directory already exists or could not be created: ${packageDir.absolutePath}"
-		}
+        def packageDir = new File(baseDir, packageName.replace('.', '/'))
+        if (packageDir.mkdirs()) {
+            println "Package directory created at: ${packageDir.absolutePath}"
+        } else {
+            println "Package directory already exists or could not be created: ${packageDir.absolutePath}"
+        }
 
 		pkg.classes?.eachWithIndex { cls, idx ->
 			// Merge package-level annotations with class-level annotations
