@@ -13,7 +13,7 @@ Model:
 
 // Existing package definition remains unchanged
 PackageDefinition:
-	annotations+=Annotation*
+    annotations+=Annotation*
     'package' packageName=QualifiedName '{'
         classes+=ClassDefinition*
         interfaces+=InterfaceDefinition*
@@ -41,12 +41,12 @@ MemberDefinition:
 
 // Method definition remains unchanged
 MethodDefinition:
-	annotations+=Annotation*
-	visibility=VisibilityModifier? // Optional visibility
-	name=ID '('
-	(parameters+=ParameterDefinition (',' parameters+=ParameterDefinition)*)? // Parameter list
-	')'
-	':' returnType=Type ';'; // Return type
+    annotations+=Annotation*
+    visibility=VisibilityModifier? // Optional visibility
+    name=ID '('
+        (parameters+=ParameterDefinition (',' parameters+=ParameterDefinition)*)? // Parameter list
+    ')'
+    ':' returnType=Type ';'; // Return type
 
 // Property definition remains unchanged
 PropertyDefinition:
@@ -63,7 +63,10 @@ Annotation:
 	'@' name=ID ('(' (arguments+=AnnotationArgument (',' arguments+=AnnotationArgument)*)? ')')?;
 
 AnnotationArgument:
-    name=ID '=' value=(STRING | BooleanLiteral | QualifiedName); // Annotation argument values
+    name=ID '=' value=(STRING | BooleanLiteral | QualifiedName);
+
+BooleanLiteral:
+    'true' | 'false';
 
 // Visibility modifier remains unchanged
 VisibilityModifier:

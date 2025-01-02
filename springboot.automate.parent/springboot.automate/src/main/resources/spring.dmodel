@@ -184,7 +184,7 @@ package com.project {
             private createdAt: Timestamp
 
             @OneToMany(mappedBy="user", cascade=CascadeType.ALL, orphanRemoval=true)
-            private orders: List<OrderEntity>
+            private orders: List<TweetEntity>
         }
     }
 }
