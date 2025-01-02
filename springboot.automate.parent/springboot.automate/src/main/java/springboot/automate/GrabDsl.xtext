@@ -30,7 +30,9 @@ ClassDefinition:
 
 InterfaceDefinition:
     annotations+=Annotation*
-    'interface' name=ID '{'
+    'interface' name=ID 
+    ('extends' interface=EntityType)? // Implementing an interface
+    '{'
         members+=MemberDefinition*
     '}';
 
@@ -74,7 +76,7 @@ Type:
 
 // Primitive types remain unchanged
 PrimitiveType:
-	'void' | 'String' | 'double' | 'float' | 'int' | 'UUID' | 'Date' | 'Timestamp' | 'List';
+    'void' | 'String' | 'double' | 'float' | 'int' | 'UUID' | 'Date' | 'Timestamp' | 'List' | 'Optional';
 
 // Qualified names remain unchanged
 QualifiedName:
@@ -82,7 +84,11 @@ QualifiedName:
 
 // Generic types remain unchanged
 GenericType:
-	QualifiedName '<' Type '>';
+	(QualifiedName | PrimitiveType) '<' Type '>';
+    
+EntityType:
+	'<' entity=Type ',' key=Type '>'
+;
 	
 SpringBootApplication:
     'springBootApplication' '{'

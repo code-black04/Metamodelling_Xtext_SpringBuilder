@@ -327,7 +327,7 @@ public class SpringBootApplication {
 
 		def interfaceFile = new File(packageDir, "${interfacedef.name}.java")
 		def content = new StringBuilder()
-		
+				
 		// Use the directory path to determine the package name
 		def packageName = packageDir.absolutePath.replaceAll('^.*src/main/java/', '').replace('/', '.')
 		println "Using package declaration: $packageName"
@@ -338,7 +338,11 @@ public class SpringBootApplication {
 		def autowiredFields = new HashSet<String>()
 
 		// Add Spring autowired annotation import
-		imports.add("org.springframework.beans.factory.annotation.Autowired")
+		if (packageName.contains("repository")) {
+			imports.add("org.springframework.data.jpa.repository.JpaRepository")
+			imports.add("org.springframework.data.jpa.repository.Query")
+			imports.add("org.springframework.stereotype.Repository")
+		}		
 		
 
 		// Collect necessary imports and autowired fields
@@ -366,6 +370,8 @@ public class SpringBootApplication {
 			}
 		}
 		content.append("\n")
+		
+		
 
 		// Add interface-level annotations
 		interfacedef.annotations?.each { annotation ->
@@ -374,7 +380,16 @@ public class SpringBootApplication {
 			content.append(annotationText).append("\n")
 		}
 
-		content.append("public interface ${interfacedef.name} {\n\n")
+
+		if (packageName.contains("repository")) {
+			content.append("public interface ${interfacedef.name}")
+			if (interfacedef.interface) {
+				content.append(" extends JPARepository<${interfacedef.interface.entity}, ${interfacedef.interface.key}>")
+			}
+			content.append(" {\n\n")
+		} else {
+			content.append("public interface ${interfacedef.name} {\n\n")
+		}
 
 		// Add autowired fields
 		// TODO by Purnima Once IUserInterface is done, add imports as well with autowiring

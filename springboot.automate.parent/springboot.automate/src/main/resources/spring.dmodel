@@ -134,4 +134,31 @@ package com.project {
             private createdAt: Timestamp
         }
     }
+    
+    package repository {
+        @Repository
+        interface UsersRepository extends <UsersEntity, UUID> {
+        	public findByUsername(username: String): Optional<UsersEntity>
+        	public findAllUsers(): List<UsersEntity>
+        }
+        
+        @Repository
+        interface TweetsRepository extends <TweetEntity, UUID> {
+            public findByUserId(userId: UUID): List<TweetEntity>
+        }
+    }
+    
+    package entity {
+    	@Entity
+        @Table(name="tweets")
+        class TweetEntity {
+            @Id
+            @GeneratedValue(strategy="UUID")
+            private id: UUID
+
+            @ManyToOne
+            @JoinColumn(name="user_id", nullable=false)
+            private user: UsersEntity
+        }
+    }
 }
