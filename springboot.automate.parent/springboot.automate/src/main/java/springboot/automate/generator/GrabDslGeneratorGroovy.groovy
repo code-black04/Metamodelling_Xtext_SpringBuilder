@@ -1,9 +1,7 @@
 package springboot.automate.generator
 
 import org.apache.groovy.parser.antlr4.GroovyParser.IfElseStatementContext
-/**
- * Serialization of entities using the DSL: used in slides
- */
+import org.checkerframework.checker.units.qual.Prefix
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
@@ -40,7 +38,7 @@ class GrabDslGeneratorGroovy {
 
 		// Generate project structure
 		generateProjectStructure(model, projectBase)
-		println "Spring Boot project generated at: ${projectBase.absolutePath}"
+		//		println "Spring Boot project generated at: ${projectBase.absolutePath}"
 	}
 
 	static void generateProjectStructure(Model model, File projectBase) {
@@ -179,15 +177,15 @@ public class Main {
 
 static void generatePackage(PackageDefinition pkg, File baseDir, String parentPackageName) {
 	def packageName = pkg.packageName?.toString()
-	println "Processing package: $packageName"
+	//	println "Processing package: $packageName"
 
 	if (parentPackageName) {
 		packageName = "${parentPackageName}.${packageName}"
 	}
-	println "Processing package: $packageName"
+	//	println "Processing package: $packageName"
 
 	if (!packageName) {
-		println "Package name is null or empty. Skipping package generation."
+		//		println "Package name is null or empty. Skipping package generation."
 		return
 	}
 
@@ -202,8 +200,8 @@ static void generatePackage(PackageDefinition pkg, File baseDir, String parentPa
 		// Merge package-level annotations with class-level annotations
 		cls.annotations = (cls.annotations ?: []) + (pkg.annotations ?: [])
 		cls.annotations = cls.annotations.unique { it.name }
-		println "Found class: ${cls.name}"
-		println "Class ${idx + 1}: ${cls.name} | Annotations: ${cls.annotations?.collect { it.name }}"
+		//		println "Found class: ${cls.name}"
+		//		println "Class ${idx + 1}: ${cls.name} | Annotations: ${cls.annotations?.collect { it.name }}"
 		generateClass(cls, packageDir)
 	}
 
@@ -211,7 +209,7 @@ static void generatePackage(PackageDefinition pkg, File baseDir, String parentPa
 		// Merge package-level annotations with interface-level annotations
 		interfacedef.annotations = (interfacedef.annotations ?: []) + (pkg.annotations ?: [])
 		interfacedef.annotations = interfacedef.annotations.unique { it.name }
-		println "Found interface: ${interfacedef.name}"
+		//		println "Found interface: ${interfacedef.name}"
 		generateInterface(interfacedef, packageDir) // Correct method for interfaces
 	}
 }
@@ -219,7 +217,7 @@ static void generatePackage(PackageDefinition pkg, File baseDir, String parentPa
 static void generateClass(ClassDefinition cls, File packageDir) {
 
 	def isInterface = false
-	println "Generating class: ${cls.name} in package: ${packageDir.absolutePath}"
+	//	println "Generating class: ${cls.name} in package: ${packageDir.absolutePath}"
 
 	if (!cls?.name) {
 		println "Class name is null or empty. Skipping class generation."
@@ -231,7 +229,7 @@ static void generateClass(ClassDefinition cls, File packageDir) {
 
 	// Use the directory path to determine the package name
 	def packageName = packageDir.absolutePath.replaceAll('^.*src/main/java/', '').replace('/', '.')
-	println "Using package declaration: $packageName"
+	//	println "Using package declaration: $packageName"
 	content.append("package $packageName;\n\n")
 
 	// Sets to track imports and autowired fields
@@ -246,7 +244,7 @@ static void generateClass(ClassDefinition cls, File packageDir) {
 		imports.add("org.springframework.web.bind.annotation.RequestMethod");
 		imports.add("org.springframework.beans.factory.annotation.Autowired")
 	} else if (packageName.contains("service")) {
-		imports.add("org.springframework.stereotype.Service;");
+		imports.add("org.springframework.stereotype.Service");
 	} else if(packageName.contains("entity")) {
 		imports.add("javax.persistence.Column");
 		imports.add("javax.persistence.Entity");
@@ -267,37 +265,49 @@ static void generateClass(ClassDefinition cls, File packageDir) {
 	cls.members.each { member ->
 		if (member.method) {
 			member.method.parameters.each { param ->
-				if (param.type?.toString()?.contains("dto.")) {
-					// Generate fully qualified name for import
-					def type = "com.project.${param.type}"
-					imports.add(type) // Add to imports
-					def fieldName = type.split("\\.").last().uncapitalize()
-					if (!autowiredFields.contains(fieldName)) {
-						autowiredFields.add(fieldName) // Add to autowired fields
+				def type = param.type?.toString()
+				if (type) {
+					// Check for custom project packages
+					[
+						"dto.",
+						"entity.",
+						"controller."
+					].each { prefix ->
+						if (type.contains(prefix)) {
+							def fullType = "com.project.${type}"
+							imports.add(fullType) // Add to imports
+							def fieldName = fullType.split("\\.").last().uncapitalize()
+							if (!autowiredFields.contains(fieldName)) {
+								autowiredFields.add(fieldName) // Add to autowired fields
+							}
+						}
 					}
-				}
-				if (param.type?.toString()?.contains("UUID")) {
-					imports.add("java.util.UUID") // Add UUID import
-				}
-				if (param.type?.toString()?.contains("List")) {
-					imports.add("java.util.List") // Add UUID import
+
+					// Add standard imports based on type
+					if (type.contains("UUID")) {
+						imports.add("java.util.UUID") // Add UUID import
+					}
+					if (type.contains("List")) {
+						imports.add("java.util.List") // Add List import
+					}
 				}
 			}
 		}
-		
+
+
 		if (member.property) {
 			if (member.property.type?.toString()?.contains("UUID")) {
 				imports.add("java.util.UUID") // Add UUID import
 			}
-			
+
 			if (member.property.type?.toString()?.contains("Date")) {
 				imports.add("java.util.Date") // Add UUID import
 			}
-			
+
 			if (member.property.type?.toString()?.contains("List")) {
 				imports.add("java.util.List") // Add UUID import
 			}
-			
+
 			if (member.property.type?.toString()?.contains("Timestamp")) {
 				imports.add("java.sql.Timestamp") // Add UUID import
 			}
@@ -316,7 +326,7 @@ static void generateClass(ClassDefinition cls, File packageDir) {
 	// Add class-level annotations
 	cls.annotations?.each { annotation ->
 		def annotationText = generateAnnotation(annotation)
-		println "Adding annotation: ${annotationText} to class: ${cls.name}"
+		//		println "Adding annotation: ${annotationText} to class: ${cls.name}"
 		content.append(annotationText).append("\n")
 	}
 
@@ -331,7 +341,7 @@ static void generateClass(ClassDefinition cls, File packageDir) {
 	// TODO by Purnima Once IUserInterface is done, add imports as well with autowiring
 	autowiredFields.each { fieldName ->
 		def className = fieldName.capitalize() // Extract the class name from the field name
-		println "Adding autowired field: ${fieldName} of type: ${className}"
+		//		println "Adding autowired field: ${fieldName} of type: ${className}"
 		content.append("    @Autowired\n    private ${className} ${fieldName};")
 	}
 
@@ -346,14 +356,13 @@ static void generateClass(ClassDefinition cls, File packageDir) {
 
 	content.append("}")
 	classFile.text = content.toString()
-	println "Class file written: ${classFile.absolutePath}"
+	//	println "Class file written: ${classFile.absolutePath}"
 }
 
 
 static void generateInterface(InterfaceDefinition interfacedef, File packageDir) {
 
 	def isInterface = true
-	println "Generating interface: ${interfacedef.name} in package: ${packageDir.absolutePath}"
 
 	if (!interfacedef?.name) {
 		println "Interface name is null or empty. Skipping interface generation."
@@ -365,7 +374,6 @@ static void generateInterface(InterfaceDefinition interfacedef, File packageDir)
 
 	// Use the directory path to determine the package name
 	def packageName = packageDir.absolutePath.replaceAll('^.*src/main/java/', '').replace('/', '.')
-	println "Using package declaration: $packageName"
 	content.append("package $packageName;\n\n")
 
 	// Sets to track imports and autowired fields
@@ -383,37 +391,56 @@ static void generateInterface(InterfaceDefinition interfacedef, File packageDir)
 	interfacedef.members.each { member ->
 		if (member.method) {
 			member.method.parameters.each { param ->
-				if (param.type?.toString()?.contains("dto.")) {
-					// Generate fully qualified name for import
-					def type = "com.project.${param.type}"
-					imports.add(type) // Add to imports
-					def fieldName = type.split("\\.").last().uncapitalize()
-					if (!autowiredFields.contains(fieldName)) {
-						autowiredFields.add(fieldName) // Add to autowired fields
+				def type = param.type?.toString()
+				if (type) {
+					[
+						"dto.",
+						"entity.",
+						"controller."
+					].each { prefix ->
+						if (type.contains(prefix)) {
+							def fullType = "com.project.${type}"
+							imports.add(fullType) // Add to imports
+							def fieldName = fullType.split("\\.").last().uncapitalize()
+							if (!autowiredFields.contains(fieldName)) {
+								autowiredFields.add(fieldName) // Add to autowired fields
+							}
+						}
 					}
 				}
-				if (param.type?.toString()?.contains("UUID")) {
+				if (type.contains("UUID")) {
 					imports.add("java.util.UUID") // Add UUID import
 				}
-				if (param.type?.toString()?.contains("List")) {
+				if (type.contains("List")) {
 					imports.add("java.util.List") // Add UUID import
 				}
 			}
-			
+
 			// Check return type
 			if (member.method.returnType?.toString()?.contains("List")) {
 				imports.add("java.util.List") // Add List import
 			}
+			if (member.method.returnType?.toString()?.contains("Optional")) {
+				imports.add("java.util.Optional");
+			}
 		}
-		
+
 		if (member.property) {
 			if (member.property.type?.toString()?.contains("UUID")) {
 				imports.add("java.util.UUID") // Add UUID import
 			}
-			
+
 			if (member.property.type?.toString()?.contains("List")) {
 				imports.add("java.util.List") // Add UUID import
 			}
+		}
+	}
+
+	// Collect imports for JpaRepository key
+	if (packageName.contains("repository") && interfacedef.interface) {
+		def keyType = interfacedef.interface.key
+		if (keyType == "UUID") {
+			imports.add("java.util.UUID")
 		}
 	}
 
@@ -426,12 +453,10 @@ static void generateInterface(InterfaceDefinition interfacedef, File packageDir)
 	}
 	content.append("\n")
 
-
-
 	// Add interface-level annotations
 	interfacedef.annotations?.each { annotation ->
 		def annotationText = generateAnnotation(annotation)
-		println "Adding annotation: ${annotationText} to interface: ${interfacedef.name}"
+		//		println "Adding annotation: ${annotationText} to interface: ${interfacedef.name}"
 		content.append(annotationText).append("\n")
 	}
 
@@ -450,7 +475,7 @@ static void generateInterface(InterfaceDefinition interfacedef, File packageDir)
 	// TODO by Purnima Once IUserInterface is done, add imports as well with autowiring
 	autowiredFields.each { fieldName ->
 		def interfaceName = fieldName.capitalize() // Extract the class name from the field name
-		println "Adding autowired field: ${fieldName} of type: ${className}"
+		//		println "Adding autowired field: ${fieldName} of type: ${className}"
 		content.append("    @Autowired\n    private ${className} ${fieldName};")
 	}
 
@@ -465,12 +490,12 @@ static void generateInterface(InterfaceDefinition interfacedef, File packageDir)
 
 	content.append("}")
 	interfaceFile.text = content.toString()
-	println "interface file written: ${interfaceFile.absolutePath}"
+	//	println "interface file written: ${interfaceFile.absolutePath}"
 }
 
 
 static String generateProperty(PropertyDefinition property) {
-	println "Processing property: ${property.name}"
+	//	println "Processing property: ${property.name}"
 
 	// Safely handle visibility
 	def visibility = property.visibility?.toString()?.toLowerCase() ?: "private"
@@ -492,7 +517,7 @@ static String generateProperty(PropertyDefinition property) {
 
 
 static String generateMethod(MethodDefinition method, boolean isInterface) {
-	println "Processing method: ${method.name}"
+	//	println "Processing method: ${method.name}"
 
 	// Safely handle visibility
 	def visibility = method.visibility?.toString()?.toLowerCase() ?: "public"
