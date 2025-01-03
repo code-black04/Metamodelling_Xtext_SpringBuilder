@@ -11,24 +11,94 @@ package com.project {
         }
 
         dependencies {
+	        dependency {
+	            groupId = "org.springframework.boot"
+	            artifactId = "spring-boot-starter-web"
+	            version = "2.5.6"
+	            scope = "compile"
+	        }
+	        
+	        dependency {
+	            groupId = "org.projectlombok"
+	            artifactId = "lombok"
+	            version = "1.18.32"
+	            scope = "compile"            
+	        }
+	        
             dependency {
-                groupId = "org.springframework.boot"
-                artifactId = "spring-boot-starter-web"
-                version = "2.7.5"
-                scope = "compile"
-            }
-            dependency {
-                groupId = "org.springframework.boot"
-                artifactId = "spring-boot-starter-data-jpa"
-                version = "2.7.5"
-                scope = "compile"
-            }
-            dependency {
-                groupId = "org.springframework.boot"
-                artifactId = "spring-boot-starter-test"
-                version = "2.7.5"
-                scope = "test"
-            }
+	            groupId = "org.springframework.boot"
+	            artifactId = "spring-boot-starter-data-jpa"
+	            version = "2.5.6"
+	            scope = "compile"
+        	}
+        
+	        dependency {
+	            groupId = "org.springframework.boot"
+	            artifactId = "spring-boot-starter-validation"
+	            version = "2.5.6"
+	            scope = "compile"
+	        }
+	        
+	        dependency {
+	            groupId = "io.github.rieske.dbtest"
+	            artifactId = "h2"
+	            version = "0.0.5"
+	            scope = "runtime"
+	        }
+	        
+	        dependency {
+	            groupId = "com.fasterxml.jackson.core"
+	            artifactId = "jackson-annotations"
+	            version = "2.15.1"
+	        }
+	        
+	        dependency {
+	            groupId = "org.hibernate"
+	            artifactId = "hibernate-core"
+	            version = "5.4.32.Final"
+	        }
+	        
+	        dependency {
+	            groupId = "org.modelmapper"
+	            artifactId = "modelmapper"
+	            version = "3.1.1"
+	        }
+	        
+	        dependency {
+	            groupId = "com.fasterxml.jackson.core"
+	            artifactId = "jackson-databind"
+	            version = "2.13.4.2"
+	        }
+	        
+	        dependency {
+	            groupId = "javax.xml.bind"
+	            artifactId = "jaxb-api"
+	            version = "2.3.1"
+	        }
+	        
+	        dependency {
+	            groupId = "jakarta.persistence"
+	            artifactId = "jakarta.persistence-api"
+	            version = "2.2.3"
+	        }
+	        
+	        dependency {
+	            groupId = "io.springfox"
+	            artifactId = "springfox-swagger2"
+	            version = "3.0.0"
+	        }
+	        
+	        dependency {
+	            groupId = "io.springfox"
+	            artifactId = "springfox-boot-starter"
+	            version = "3.0.0"
+	        }
+	        
+	        dependency {
+	            groupId = "io.springfox"
+	            artifactId = "springfox-swagger-ui"
+	            version = "3.0.0"
+	        }
         }
         
         build {
@@ -45,70 +115,7 @@ package com.project {
             }
         }
     }
-
-	package controller {
-        @RestController(path="\\api")
-        class UsersController {
-            @Autowired
-            private iUsersService: IUsersService
-
-            @RequestMapping(method = "POST")
-            public createUsers(userDto: dto.UsersDto): void
-
-            @RequestMapping(method = "PUT")
-            public updateUser(userId: UUID, userDto: UsersDto): void
-
-            @RequestMapping(method = "DELETE")
-            public deleteUser(userId: UUID): void
-
-            @RequestMapping(method = "GET")
-            public getAllUsers(): List<UsersDto>
-
-            @RequestMapping(method = "GET")
-            public getUserByUsername(username: String): UsersDto
-        }
-    }
-	
-    package service {
-        @Service
-        class UsersService implements IUsersInterface {
-           
-            @Override
-            public createUsers(userDto: UsersDto): void
-           
-            @Override
-            public updateUser(userId: UUID, userDto: UsersDto): void
-           
-            @Override
-            public deleteUser(userId: UUID): void
-           
-            @Override
-            public getAllUsers(): List<UsersDto>
-           
-            @Override
-            public getUserByUsername(username: String): UsersDto
-        }
-       
-    }
     
-    package serviceInterface {
-    	@Interface
-    	interface IUsersService {
-           
-            public createUsers(userDto: UsersDto): void
-           
-            public updateUser(userId: UUID, userDto: UsersDto): void
-           
-            public deleteUser(userId: UUID): void
-           
-            public getAllUsers(): List<UsersDto>
-           
-            public getUserByUsername(username: String): UsersDto
-           
-        }
-    
-    }
-   
     package dto {
         @Data
         @NoArgsConstructor
@@ -129,32 +136,7 @@ package com.project {
         }
     }
     
-    package repository {
-        @Repository
-        interface UsersRepository extends <UsersEntity, UUID> {
-        	public findByUsername(username: String): Optional<UsersEntity>
-        	public findAllUsers(): List<UsersEntity>
-        }
-        
-        @Repository
-        interface TweetsRepository extends <TweetEntity, UUID> {
-            public findByUserId(userId: UUID): List<TweetEntity>
-        }
-    }
-    
     package entity {
-	    @Entity
-	    @Table(name="tweets")
-	    class TweetEntity {
-	        @Id
-	        @GeneratedValue(strategy="UUID")
-	        private id: UUID
-	
-	        @ManyToOne
-	        @JoinColumn(name="user_id", nullable=false)
-	        private user: UsersEntity
-	    }
-	    
 	    @Entity
 	    @Table(name="users")
 	    class UsersEntity {
@@ -176,9 +158,77 @@ package com.project {
 	        
 	        @Column(name="created_at")
 	        private createdAt: Timestamp
-	
-	        @OneToMany(mappedBy="user", cascade=CascadeType.ALL, orphanRemoval=true)
-	        private orders: List<TweetEntity>
 	    }
 	}
+	
+	package serviceInterface {
+    	@Interface
+    	interface IUsersService {
+           
+            public createUsers(userDto: UsersDto): void
+           
+            public updateUser(userId: UUID, userDto: UsersDto): void
+           
+            public deleteUser(userId: UUID): void
+           
+            public getAllUsers(): List<UsersDto>
+           
+            public getUserByUsername(username: String): UsersDto
+           
+        }
+    }
+    
+    package repository {
+        @Repository
+        interface UsersRepository extends <UsersEntity, UUID> {
+        	public findByUsername(username: String): Optional<UsersEntity>
+        	public findAllUsers(): List<UsersEntity>
+        }
+    }
+    
+    package service {
+        @Service
+        class UsersService implements IUsersInterface {
+           
+            @Override
+            public createUsers(userDto: UsersDto): void
+           
+            @Override
+            public updateUser(userId: UUID, userDto: UsersDto): void
+           
+            @Override
+            public deleteUser(userId: UUID): void
+           
+            @Override
+            public getAllUsers(): List<UsersDto>
+           
+            @Override
+            public getUserByUsername(username: String): UsersDto
+        }
+       
+    }
+  
+	package controller {
+        @RestController
+		@RequestMapping(path = "/api")
+        class UsersController {
+            @Autowired
+            private iUsersService: IUsersService
+
+            @RequestMapping(method = "POST")
+            public createUsers(userDto: dto.UsersDto): void
+
+            @RequestMapping(method = "PUT")
+            public updateUser(userId: UUID, userDto: UsersDto): void
+
+            @RequestMapping(method = "DELETE")
+            public deleteUser(userId: UUID): void
+
+            @RequestMapping(method = "GET")
+            public getAllUsers(): List<UsersDto>
+
+            @RequestMapping(method = "GET")
+            public getUserByUsername(username: String): UsersDto
+        }
+    }
 }

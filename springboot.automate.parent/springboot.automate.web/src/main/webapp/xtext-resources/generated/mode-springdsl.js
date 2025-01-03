@@ -1,6 +1,6 @@
 define(["ace/lib/oop", "ace/mode/text", "ace/mode/text_highlight_rules"], function(oop, mText, mTextHighlightRules) {
 	var HighlightRules = function() {
-		var keywords = "Date|List|String|Timestamp|UUID|class|double|float|implements|int|interface|package|private|protected|public|void";
+		var keywords = "Date|List|Optional|String|Timestamp|UUID|artifactId|build|class|configuration|dependencies|dependency|double|extends|false|float|groupId|implements|int|interface|javaVersion|package|packaging|plugin|plugins|pomXml|private|properties|protected|public|scope|source|springBootVersion|target|true|version|void";
 		this.$rules = {
 			"start": [
 				{token: "comment", regex: "\\/\\/.*$"},

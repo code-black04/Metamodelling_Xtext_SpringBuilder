@@ -8,6 +8,7 @@
       fileExtensions="springdsl" ecorePackage="GrabDsl.ecore#/">
     <genClasses ecoreClass="GrabDsl.ecore#//Model">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//Model/packageName"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//Model/pomXml"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//Model/packages"/>
     </genClasses>
     <genClasses ecoreClass="GrabDsl.ecore#//PackageDefinition">
@@ -25,6 +26,7 @@
     <genClasses ecoreClass="GrabDsl.ecore#//InterfaceDefinition">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//InterfaceDefinition/annotations"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//InterfaceDefinition/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//InterfaceDefinition/interface"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//InterfaceDefinition/members"/>
     </genClasses>
     <genClasses ecoreClass="GrabDsl.ecore#//MemberDefinition">
@@ -57,6 +59,45 @@
     <genClasses ecoreClass="GrabDsl.ecore#//AnnotationArgument">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//AnnotationArgument/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//AnnotationArgument/value"/>
+    </genClasses>
+    <genClasses ecoreClass="GrabDsl.ecore#//EntityType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//EntityType/entity"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//EntityType/key"/>
+    </genClasses>
+    <genClasses ecoreClass="GrabDsl.ecore#//PomXml">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//PomXml/groupId"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//PomXml/artifactId"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//PomXml/version"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//PomXml/packaging"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//PomXml/properties"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//PomXml/dependencies"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//PomXml/build"/>
+    </genClasses>
+    <genClasses ecoreClass="GrabDsl.ecore#//Properties">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//Properties/javaVersion"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//Properties/springBootVersion"/>
+    </genClasses>
+    <genClasses ecoreClass="GrabDsl.ecore#//Dependencies">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//Dependencies/dependencies"/>
+    </genClasses>
+    <genClasses ecoreClass="GrabDsl.ecore#//Dependency">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//Dependency/groupId"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//Dependency/artifactId"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//Dependency/version"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//Dependency/scope"/>
+    </genClasses>
+    <genClasses ecoreClass="GrabDsl.ecore#//Build">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//Build/plugins"/>
+    </genClasses>
+    <genClasses ecoreClass="GrabDsl.ecore#//Plugin">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//Plugin/groupId"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//Plugin/artifactId"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//Plugin/version"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GrabDsl.ecore#//Plugin/configuration"/>
+    </genClasses>
+    <genClasses ecoreClass="GrabDsl.ecore#//Configuration">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//Configuration/source"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GrabDsl.ecore#//Configuration/target"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>
