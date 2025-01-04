@@ -238,13 +238,13 @@ static void generateClass(ClassDefinition cls, File packageDir, String basePath,
 	def packageName = resolvePackageName(packageDir)
 	content.append("package $packageName;\n\n")
 
-	def imports = collectImports(cls, packageName)
+	def imports = collectImports(cls, packageName, basePackage)
 	imports.each { content.append("import $it;\n") }
 	content.append("\n")
 
 	appendClassAnnotations(cls, content)
 	appendClassDeclaration(cls, content)
-	appendAutowiredFields(cls, content)
+	//appendAutowiredFields(cls, content)
 	appendMembers(cls, content)
 
 	content.append("}")
@@ -256,20 +256,23 @@ static String resolvePackageName(File packageDir) {
 	packageDir.absolutePath.replaceAll('^.*src/main/java/', '').replace('/', '.')
 }
 
-static Set<String> collectImports(ClassDefinition cls, String packageName) {
+static Set<String> collectImports(ClassDefinition cls, String packageName, String basePackage) {
 	def imports = new HashSet<String>()
 
-	collectStandardImports(cls, imports)
+	collectStandardImports(cls, imports, basePackage)
 	collectCustomImports(cls, packageName, imports)
-
+	if(Objects.nonNull(cls.getInterface()) && !cls.getInterface().isBlank()) {
+		imports.add( basePackage + ".serviceInterface." + cls.getInterface() )
+    }
 	return imports
 }
 
-static void collectStandardImports(ClassDefinition cls, Set<String> imports) {
+static void collectStandardImports(ClassDefinition cls, Set<String> imports, String basePackage) {
 	cls.members.each { member ->
-		collectMethodImports(member, imports)
-		collectPropertyImports(member, imports)
+		collectMethodImports(member, imports, basePackage)
+		collectPropertyImports(member, imports, basePackage)
 	}
+
 }
 
 static void collectCustomImports(ClassDefinition cls, String packageName, Set<String> imports) {
@@ -299,13 +302,23 @@ static void collectCustomImports(ClassDefinition cls, String packageName, Set<St
 	}
 }
 
-static void collectMethodImports(MemberDefinition member, Set<String> imports) {
+static void collectMethodImports(MemberDefinition member, Set<String> imports, String basePackage) {
 	if (member.method) {
 		member.method.parameters.each { param ->
 			def type = param.type?.toString()
+
+			
 			if (type) {
 				if (type.contains("UUID")) imports.add("java.util.UUID")
 				if (type.contains("List")) imports.add("java.util.List")
+					
+				type = getTypeWhenGeneric(type)
+				if (type.contains("Dto")) imports.add(basePackage + ".dto."+ type)
+				if (type.contains("Entity")) imports.add(basePackage + ".entity."+ type)
+				if (type.contains("Controller")) imports.add(basePackage + ".controller."+ type)
+				if (!type.startsWith("I") && type.contains("Service")) imports.add(basePackage + ".service."+ type)
+		        if (type.startsWith("I") && type.contains("Service")) imports.add(basePackage + ".serviceInterface."+ type)
+				if (type.contains("Repository")) imports.add(basePackage + ".repository."+ type)
 			}
 		}
 
@@ -318,13 +331,32 @@ static void collectMethodImports(MemberDefinition member, Set<String> imports) {
 	}
 }
 
-static void collectPropertyImports(MemberDefinition member, Set<String> imports) {
+	private static String getTypeWhenGeneric(String type) {
+		def match = (type =~ /<(.+)>/)
+		if (match) {
+			def extracted = match[0][1]
+			println "Extracted: $extracted"  // Output: TweetEntity
+			return extracted
+		} else {
+			println "No match found"
+		}
+		return type
+	}
+
+static void collectPropertyImports(MemberDefinition member, Set<String> imports, String basePackage) {
 	if (member.property) {
 		def type = member.property.type?.toString()
 		if (type?.contains("UUID")) imports.add("java.util.UUID")
 		if (type?.contains("Date")) imports.add("java.util.Date")
 		if (type?.contains("List")) imports.add("java.util.List")
 		if (type?.contains("Timestamp")) imports.add("java.sql.Timestamp")
+		type = getTypeWhenGeneric(type)
+		if (type.contains("Dto")) imports.add(basePackage + ".dto."+ type)
+		if (type.contains("Entity")) imports.add(basePackage + ".entity."+ type)
+		if (type.contains("Controller")) imports.add(basePackage + ".controller."+ type)
+		if (!type.startsWith("I") && type.contains("Service")) imports.add(basePackage + ".service."+ type)
+		if (type.startsWith("I") && type.contains("Service")) imports.add(basePackage + ".serviceInterface."+ type)
+		if (type.contains("Repository")) imports.add(basePackage + ".repository."+ type)
 	}
 }
 
@@ -343,6 +375,9 @@ static void appendClassDeclaration(ClassDefinition cls, StringBuilder content) {
 }
 
 static void appendAutowiredFields(ClassDefinition cls, StringBuilder content) {
+	if(isSkipAutowire(cls.name)) {
+		return
+	}
 	cls.members?.findAll { it.property }?.each { property ->
 		def typeName = property.property.type?.toString()
 		if (typeName && !isPrimitiveOrJavaLangType(typeName)) {
@@ -358,6 +393,20 @@ static void appendMembers(ClassDefinition cls, StringBuilder content) {
 			content.append("    ${generateMethod(member.method, false)}\n")
 		} else if (member.property) {
 			content.append("    ${generateProperty(member.property)}\n")
+		}
+	}
+}
+
+static boolean isSkipAutowire(String className) {
+	def skipNames = [
+		"entity",
+		"dto",
+		"repository",
+		"serviceInterface"
+	]
+	for (name in skipNames) {
+		if(className.containsIgnoreCase(name)) {
+			return true;
 		}
 	}
 }
@@ -422,8 +471,8 @@ static Set<String> collectImportsForInterface(InterfaceDefinition interfacedef, 
     }
 
     interfacedef.members.each { member ->
-        collectMethodImports(member, imports)
-        collectPropertyImports(member, imports)
+        collectMethodImports(member, imports, basePackage)
+        collectPropertyImports(member, imports, basePackage)
     }
 
     if (packageName.contains("repository") && interfacedef.interface) {
@@ -519,9 +568,9 @@ static String generateMethod(MethodDefinition method, boolean isInterface) {
 		}
 		generateAnnotation(annotation)
 	}?.join("\n    ") ?: ""
-
+	def methodReturn = Objects.nonNull(returnType) && returnType.equals("void") ? "" : "return null;"
 	if (!isInterface)
-		return "\n	${annotations}\n    $visibility $returnType ${method.name}($parameters) {\n        // TODO: Implement method\n    }"
+		return "\n	${annotations}\n    $visibility $returnType ${method.name}($parameters) {\n        // TODO: Implement method\n   $methodReturn }"
 	else
 		return "\n${annotations}\n    $visibility $returnType ${method.name}($parameters);"
 }
@@ -531,6 +580,7 @@ static String generateAnnotation(Annotation annotation) {
 	if (annotation.arguments) {
 		def arguments = annotation.arguments.collect {
 			def value = (it.value instanceof String) ? "\"${it.value}\"" : it.value
+			println "generateAnnotation ${it.name}  : ${it.value instanceof String}"
 			"${it.name}=${value}"
 		}.join(", ")
 		annotationText += "($arguments)"

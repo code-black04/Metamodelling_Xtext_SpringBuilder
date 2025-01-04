@@ -137,11 +137,21 @@ package com.project {
     }
     
     package entity {
+    	@Entity
+	    @Table(name="tweets")
+	    class TweetEntity {
+	        @Id
+	        private id: UUID
+	
+	        @ManyToOne
+	        @JoinColumn(name="user_id")
+	        private user: UsersEntity
+	    }
+	    
 	    @Entity
 	    @Table(name="users")
 	    class UsersEntity {
 	        @Id
-	        @GeneratedValue(strategy="UUID")
 	        private id: UUID
 	
 	        @Column(name="email_id")
@@ -159,7 +169,7 @@ package com.project {
 	        @Column(name="created_at")
 	        private createdAt: Timestamp
 	        
-	        @OneToMany(mappedBy="user", cascade=CascadeType.ALL, orphanRemoval=true)
+	        @OneToMany(mappedBy="user")
 	        private orders: List<TweetEntity>
 	    }
 	}
@@ -190,7 +200,7 @@ package com.project {
     
     package service {
         @Service
-        class UsersService implements IUsersInterface {
+        class UsersService implements IUsersService {
            
             @Override
             public createUsers(userDto: UsersDto): void
@@ -218,7 +228,7 @@ package com.project {
             private iUsersService: IUsersService
 
             @RequestMapping(method = "POST")
-            public createUsers(userDto: dto.UsersDto): void
+            public createUsers(userDto: UsersDto): void
 
             @RequestMapping(method = "PUT")
             public updateUser(userId: UUID, userDto: UsersDto): void
