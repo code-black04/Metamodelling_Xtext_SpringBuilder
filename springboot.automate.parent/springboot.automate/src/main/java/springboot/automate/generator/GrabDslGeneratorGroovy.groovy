@@ -284,7 +284,8 @@ static void collectCustomImports(ClassDefinition cls, String packageName, Set<St
 			"org.springframework.web.bind.annotation.RestController",
 			"org.springframework.web.bind.annotation.RequestMapping",
 			"org.springframework.web.bind.annotation.RequestMethod",
-			"org.springframework.beans.factory.annotation.Autowired"
+			"org.springframework.beans.factory.annotation.Autowired",
+			"org.springframework.http.ResponseEntity"
 		])
 	} else if (packageName.contains("service")) {
 		imports.add("org.springframework.stereotype.Service")
@@ -327,10 +328,12 @@ private static addCommonImports(Set imports, String importType, String basePacka
 		if (importType.contains("Optional"))	imports.add("java.util.Optional")
 		if (importType?.contains("Timestamp")) imports.add("java.sql.Timestamp")
 		if (importType?.contains("Date")) imports.add("java.util.Date")
+		if (importType?.contains("HttpStatus")) imports.add("org.springframework.http.HttpStatus")
+			
 
 		importType = getTypeWhenGeneric(importType)
 		if (importType.contains("Dto")) imports.add(basePackage + ".dto."+ importType)
-		if (importType.contains("Entity")) imports.add(basePackage + ".entity."+ importType)
+		if (importType.contains("Entity") && !importType.contains("ResponseEntity")) imports.add(basePackage + ".entity."+ importType)
 		if (importType.contains("Controller")) imports.add(basePackage + ".controller."+ importType)
 		if (!importType.startsWith("I") && importType.contains("Service")) imports.add(basePackage + ".service."+ importType)
 		if (importType.startsWith("I") && importType.contains("Service")) imports.add(basePackage + ".serviceInterface."+ importType)
@@ -561,9 +564,9 @@ static String generateMethod(MethodDefinition method, boolean isInterface) {
 		}
 		generateAnnotation(annotation)
 	}?.join("\n    ") ?: ""
-	def methodReturn = Objects.nonNull(returnType) && returnType.equals("void") ? "" : "return null;"
+	def methodReturn = Objects.nonNull(returnType) && returnType.equals("void") ? "" : "	return null;"
 	if (!isInterface)
-		return "\n	${annotations}\n    $visibility $returnType ${method.name}($parameters) {\n        // TODO: Implement method\n   $methodReturn  \n}"
+		return "\n	${annotations}\n    $visibility $returnType ${method.name}($parameters) {\n        // TODO: Implement method\n	$methodReturn  		\n	}"
 	else
 		return "\n${annotations}\n    $visibility $returnType ${method.name}($parameters);"
 }
