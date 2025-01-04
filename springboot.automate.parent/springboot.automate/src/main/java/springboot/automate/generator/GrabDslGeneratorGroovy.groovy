@@ -374,10 +374,10 @@ private static addCommonImports(Set imports, String importType, String basePacka
 		def match = (type =~ /<(.+)>/)
 		if (match) {
 			def extracted = match[0][1]
-			println "Extracted: $extracted"  // Output: TweetEntity
+			//println "Extracted: $extracted"  // Output: TweetEntity
 			return extracted
 		} else {
-			println "No match found"
+			//println "No match found"
 		}
 		return type
 	}
@@ -595,7 +595,7 @@ static String generateMethod(MethodDefinition method, boolean isInterface) {
 	}?.join("\n    ") ?: ""
 	def methodReturn = Objects.nonNull(returnType) && returnType.equals("void") ? "" : "return null;"
 	if (!isInterface)
-		return "\n	${annotations}\n    $visibility $returnType ${method.name}($parameters) {\n        // TODO: Implement method\n   $methodReturn }"
+		return "\n	${annotations}\n    $visibility $returnType ${method.name}($parameters) {\n        // TODO: Implement method\n   $methodReturn  \n}"
 	else
 		return "\n${annotations}\n    $visibility $returnType ${method.name}($parameters);"
 }
@@ -605,7 +605,6 @@ static String generateAnnotation(Annotation annotation) {
 	if (annotation.arguments) {
 		def arguments = annotation.arguments.collect {
 			def value = (it.value instanceof String) ? "\"${it.value}\"" : it.value
-			println "generateAnnotation ${it.name}  : ${it.value instanceof String}"
 			"${it.name}=${value}"
 		}.join(", ")
 		annotationText += "($arguments)"
