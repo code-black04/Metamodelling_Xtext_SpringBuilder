@@ -138,104 +138,56 @@ package com.project {
         @Data
         @NoArgsConstructor
         @AllArgsConstructor
-        class PostDto {
+        class TweetsDto {
        		private id: UUID
        		
        		private tweetId: String
        		
        		private userId: String
        		
-       		private posts: List<PostCommentDto>
+       		private posts: List<TweetsCommentDto>
+       		
+       		private createdAt: Timestamp
         }
         
         @Data
         @NoArgsConstructor
         @AllArgsConstructor
-        class PostCommentDto {
+        class TweetsCommentDto {
        		private id: UUID
        		
        		private post: String
         }
+        
+        @Data
+        @NoArgsConstructor
+        @AllArgsConstructor
+        class FeedsTweetDto {
+        	private id: UUID
+       		
+       		private userId: String
+       		
+       		private posts: List<TweetsCommentDto>
+       		
+       		private createdAt: Timestamp
+        }
+        
+        @Data
+        @NoArgsConstructor
+        @AllArgsConstructor
+        class MessageDto {
+        	private responseStatusCode: HttpStatus
+        	
+        	private responseMessage: String
+        }
     }
     
-    package entity {
-    	@Entity
-	    @Table(name="tweets")
-	    class TweetEntity {
-	        @Id
-	        private id: UUID
-	
-	        @ManyToOne
-	        @JoinColumn(name="user_id")
-	        private user: UsersEntity
-	    }
-	    
-	    @Entity
-	    @Table(name="users")
-	    class UsersEntity {
-	        @Id
-	        private id: UUID
-	
-	        @Column(name="email_id")
-	        private emailId: String
-	        
-	        @Column(name="username")
-	        private username: String
-	        
-	        @Column(name="password")
-	        private password: String
-	        
-	        @Column(name="dob")
-	        private dob: Date
-	        
-	        @Column(name="created_at")
-	        private createdAt: Timestamp
-	        
-	        @OneToMany(mappedBy="user")
-	        private orders: List<TweetEntity>
-	    }
-	    
-	    @Entity
-	    @Table(name="post_comment")
-	    class PostCommentEntity {
-	        @Id
-	        private id: UUID
-	
-	        @Column(name="comment")
-	        private comment: String
-	        
-	        @JoinColumn(name="tweet_id")
-	         private tweet: TweetEntity
-	         
-	         @JoinColumn(name="post_id")
-	         private post: PostEntity
-
-	    }
-	    
-	    @Entity
-	    @Table(name="post")
-	    class PostEntity {
-	        @Id
-	        private id: UUID
-	
-	        @ManyToOne
-	        @JoinColumn(name="user_id")
-	        private user: UsersEntity
-	        
-	        @JoinColumn(name="tweet_id")
-	         private tweet: TweetEntity
-	         	         
-	         @OneToMany(mappedBy="post")
-	        private postComments: List<PostCommentEntity>
-	    }
-	}
-	
-	package serviceInterface {
+    package serviceInterface {
     	interface IUsersService {
            
-            public createUsers(userDto: UsersDto): void
+            public createUsers(userDto: UsersDto): UsersDto
            
-            public updateUser(userId: UUID, userDto: UsersDto): void
+            public updateUser(userId: UUID, userDto: UsersDto): UsersDto
            
             public deleteUser(userId: UUID): void
            
@@ -245,68 +197,47 @@ package com.project {
            
         }
         
-        interface IPostService {
-           public getAllPostById(tweetId: String): List<PostDto>
+        interface INewfeedsService {
+        	public createNewsFeeds(feedsTweetDto: FeedsTweetDto): FeedsTweetDto
+           
+            public updateNewsFeeds(feedId: UUID, feedsTweetDto: FeedsTweetDto): FeedsTweetDto
+           
+            public deleteNewFeed(feedId: UUID): void
+           
+            public getAllTweets(): List<FeedsTweetDto>
+           
+            public getNewsFeedById(userId: UUID): FeedsTweetDto
+        }
+        
+        interface ITweetService {
+           public createTweet(tweetsDto: TweetsDto): TweetsDto
+           
+           public updateTweet(tweetId: UUID, tweetsDto: TweetsDto): TweetsDto
+           
+           public deleteTweetById(tweedId: UUID): void
+           
+           public getAllTweets(): List<TweetsDto>
+           
+           public getTweetById(tweetId: UUID): TweetsDto
         }
     }
     
-    package repository {
-        @Repository
-        interface UsersRepository extends <UsersEntity, UUID> {
-        	public findByUsername(username: String): Optional<UsersEntity>
-        	public findAllUsers(): List<UsersEntity>
-        }
-        
-        @Repository
-        interface PostRepository extends <PostEntity, UUID> {
-        	public getAllPostById(tweetId: String): List<PostDto>
-        }
-    }
-    
-    package service {
-        @Service
-        class UsersService implements IUsersService {
-           
-            @Override
-            public createUsers(userDto: UsersDto): void
-           
-            @Override
-            public updateUser(userId: UUID, userDto: UsersDto): void
-           
-            @Override
-            public deleteUser(userId: UUID): void
-           
-            @Override
-            public getAllUsers(): List<UsersDto>
-           
-            @Override
-            public getUserByUsername(username: String): UsersDto
-        }
-        
-        @Service
-        class PostService implements IPostService {
-        
-           @Override
-            public getAllPostById(tweetId: String): List<PostDto>
-        }
-       
-    }
-  
-	package controller {
+    package controller {
         @RestController
-		@RequestMapping(path = "/api")
+		@RequestMapping(path = "/api/users")
         class UsersController {
+        
             @Autowired
             private iUsersService: IUsersService
 
             @RequestMapping(method = "POST")
-            public createUsers(userDto: UsersDto): void
+            public createUsers(userDto: UsersDto): ResponseEntity<MessageDto>
 
             @RequestMapping(method = "PUT")
-            public updateUser(userId: UUID, userDto: UsersDto): void
+            public updateUser(userId: UUID, userDto: UsersDto): ResponseEntity<MessageDto>
             
             @RequestMapping(method = "PUT")
-            public updateUserName(userId: UUID, name: String): void
+            public updateUserName(userId: UUID, name: String): ResponseEntity<MessageDto>
 
             @RequestMapping(method = "DELETE")
             public deleteUser(userId: UUID): void
@@ -319,13 +250,227 @@ package com.project {
         }
         
         @RestController
-		@RequestMapping(path = "/api/post")
-        class PostController {
+        @RequestMapping(path = "/api/feeds")
+        class NewfeedsController {
+        
             @Autowired
-            private postService: IPostService
+            private iNewfeedsService: INewfeedsService
+
+            @RequestMapping(method = "POST")
+            public createNewsFeeds(feedsTweetDto: FeedsTweetDto): ResponseEntity<MessageDto>
+
+            @RequestMapping(method = "PUT")
+            public updateNewsFeeds(userId: UUID, feedsTweetDto: FeedsTweetDto): ResponseEntity<MessageDto>
+            
+            @RequestMapping(method = "DELETE")
+            public deleteNewFeed(userId: UUID, name: String): ResponseEntity<MessageDto>
 
             @RequestMapping(method = "GET")
-            public getAllPostById(tweetId: String): List<PostDto>
+            public getAllTweets(): List<FeedsTweetDto>
+
+            @RequestMapping(method = "GET")
+            public getNewsFeedById(userId: UUID): FeedsTweetDto
+        }
+        
+        @RestController
+        @RequestMapping(path = "/api/tweets")
+        class TweetController {
+        
+            @Autowired
+            private iNewfeedsService: INewfeedsService
+
+            @RequestMapping(method = "POST")
+            public createTweet(tweetsDto: TweetsDto): ResponseEntity<MessageDto>
+
+            @RequestMapping(method = "PUT")
+            public updateTweet(userId: UUID, tweetsDto: TweetsDto): ResponseEntity<MessageDto>
+            
+            @RequestMapping(method = "DELETE")
+            public deleteTweetById(tweedId: UUID): ResponseEntity<MessageDto>
+
+            @RequestMapping(method = "GET")
+            public getAllTweets(): List<TweetsDto>
+
+            @RequestMapping(method = "GET")
+            public getTweetById(tweetId: UUID): TweetsDto
         }
     }
+    
+    package entity {
+
+	    @Entity
+	    @Table(name = "users")
+	    class UsersEntity {
+	
+	        @Id
+	        private id: UUID
+	
+	        @Column(name = "email_id")
+	        private emailId: String
+	
+	        @Column(name = "username")
+	        private username: String
+	
+	        @Column(name = "password")
+	        private password: String
+	
+	        @Column(name = "dob")
+	        private dob: Date
+	
+	        @Column(name = "created_at")
+	        private createdAt: Timestamp
+	
+	        @OneToMany(mappedBy = "users")
+	        private tweets: List<TweetsEntity>
+	    }
+	
+	    @Entity
+	    @Table(name = "tweets")
+	    class TweetsEntity {
+	
+	        @Id
+	        private id: UUID
+	
+	        @Column(name = "tweet_id")
+	        private tweetId: String
+	
+	        @ManyToOne
+	        @JoinColumn(name = "user_id")
+	        private user: UsersEntity
+	
+	        @OneToMany(mappedBy = "tweets")
+	        private posts: List<TweetsCommentEntity>
+	
+	        @Column(name = "created_at")
+	        private createdAt: Timestamp
+	    }
+	
+	    @Entity
+	    @Table(name = "tweets_comments")
+	    class TweetsCommentEntity {
+	
+	        @Id
+	        private id: UUID
+	
+	        @Column(name = "post")
+	        private post: String
+	
+	        @ManyToOne
+	        @JoinColumn(name = "tweet_id")
+	        private tweet: TweetsEntity
+	    }
+	
+	    @Entity
+	    @Table(name = "feeds_tweets")
+	    class FeedsTweetEntity {
+	
+	        @Id
+	        private id: UUID
+	
+	        @Column(name = "user_id")
+	        private userId: String
+	
+	        @OneToMany(mappedBy = "feedTweet")
+	        private posts: List<TweetsCommentEntity>
+	
+	        @Column(name = "created_at")
+	        private createdAt: Timestamp
+	    }
+	}
+	
+	package repository {
+
+	    @Repository
+	    interface UsersRepository extends <UsersEntity, UUID> {
+	        public findByUsername(username: String): Optional<UsersEntity>
+	        public findAllUsers(): List<UsersEntity>
+	    }
+	
+	    @Repository
+	    interface TweetsRepository extends <TweetsEntity, UUID> {
+	        public findByTweetId(tweetId: String): Optional<TweetsEntity>
+	        public findAllTweets(): List<TweetsEntity>
+	    }
+	
+	    @Repository
+	    interface TweetsCommentRepository extends <TweetsCommentEntity, UUID> {
+	        public findByTweetId(tweetId: UUID): List<TweetsCommentEntity>
+	    }
+	
+	    @Repository
+	    interface FeedsTweetRepository extends <FeedsTweetEntity, UUID> {
+	        public findByUserId(userId: String): List<FeedsTweetEntity>
+	        public findAllFeeds(): List<FeedsTweetEntity>
+	    }
+	}
+	
+	
+	package service {
+
+	    @Service
+	    class UsersService implements IUsersService {
+	    
+	    	@Autowired
+            private usersRepository: UsersRepository
+	
+	        @Override
+	        public createUsers(userDto: UsersDto): UsersDto
+	
+	        @Override
+	        public updateUser(userId: UUID, userDto: UsersDto): UsersDto
+	
+	        @Override
+	        public deleteUser(userId: UUID): void
+	
+	        @Override
+	        public getAllUsers(): List<UsersDto>
+	
+	        @Override
+	        public getUserByUsername(username: String): UsersDto
+	    }
+	
+	    @Service
+	    class NewsFeedsService implements INewfeedsService {
+	    
+	    	@Autowired
+            private feedsTweetRepository: FeedsTweetRepository
+	
+	        @Override
+	        public createNewsFeeds(feedsTweetDto: FeedsTweetDto): FeedsTweetDto
+	
+	        @Override
+	        public updateNewsFeeds(feedId: UUID, feedsTweetDto: FeedsTweetDto): FeedsTweetDto
+	
+	        @Override
+	        public deleteNewFeed(feedId: UUID): void
+	
+	        @Override
+	        public getAllTweets(): List<FeedsTweetDto>
+	
+	        @Override
+	        public getNewsFeedById(userId: UUID): FeedsTweetDto
+	    }
+	
+	    @Service
+	    class TweetService implements ITweetService {
+	    
+	    	@Autowired
+	    	private tweetsRepository: TweetsRepository
+	
+	        @Override
+	        public createTweet(tweetsDto: TweetsDto): TweetsDto
+	
+	        @Override
+	        public updateTweet(tweetId: UUID, tweetsDto: TweetsDto): TweetsDto
+	
+	        @Override
+	        public deleteTweetById(tweedId: UUID): void
+	
+	        @Override
+	        public getAllTweets(): List<TweetsDto>
+	
+	        @Override
+	        public getTweetById(tweetId: UUID): TweetsDto
+	    }
+	}
 }
