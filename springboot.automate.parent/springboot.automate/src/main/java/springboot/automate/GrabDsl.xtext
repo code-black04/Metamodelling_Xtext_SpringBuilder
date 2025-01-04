@@ -78,9 +78,6 @@ GenericType:
 EntityType:
     '<' entity=Type ',' key=Type '>';
 
-// --------------------
-// New PomXml definition
-// --------------------
 PomXml:
     'pomXml' '{'
         'groupId' '=' groupId=STRING
@@ -107,8 +104,8 @@ Dependency:
     'dependency' '{'
         'groupId' '=' groupId=STRING
         'artifactId' '=' artifactId=STRING
-        'version' '=' version=STRING
-        'scope' '=' scope=STRING
+        ('version' '=' version=STRING)?
+        ('scope' '=' scope=STRING)?
     '}';
 
 Build:
@@ -132,5 +129,3 @@ Configuration:
             'target' '=' target=STRING
         '}'
 ;
-    
-
