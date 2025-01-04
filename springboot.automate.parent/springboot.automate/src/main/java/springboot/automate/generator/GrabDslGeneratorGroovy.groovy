@@ -270,9 +270,11 @@ static Set<String> collectImports(ClassDefinition cls, String packageName, Strin
 static void collectStandardImports(ClassDefinition cls, Set<String> imports, String basePackage) {
 	cls.members.each { member ->
 		collectMethodImports(member, imports, basePackage)
-		collectPropertyImports(member, imports, basePackage)
+		if (member.property) {
+			def type = member.property.type?.toString()
+			addCommonImports(imports, type, basePackage)
+		}
 	}
-
 }
 
 static void collectCustomImports(ClassDefinition cls, String packageName, Set<String> imports) {
@@ -306,42 +308,65 @@ static void collectMethodImports(MemberDefinition member, Set<String> imports, S
 	if (member.method) {
 		member.method.parameters.each { param ->
 			def type = param.type?.toString()
-
-			
 			if (type) {
-				if (type.contains("UUID")) imports.add("java.util.UUID")
-				if (type.contains("List")) imports.add("java.util.List")
-				if (type.contains("String")) imports.add("java.lang.String")
-					
-				type = getTypeWhenGeneric(type)
-				if (type.contains("Dto")) imports.add(basePackage + ".dto."+ type)
-				if (type.contains("Entity")) imports.add(basePackage + ".entity."+ type)
-				if (type.contains("Controller")) imports.add(basePackage + ".controller."+ type)
-				if (!type.startsWith("I") && type.contains("Service")) imports.add(basePackage + ".service."+ type)
-		        if (type.startsWith("I") && type.contains("Service")) imports.add(basePackage + ".serviceInterface."+ type)
-				if (type.contains("Repository")) imports.add(basePackage + ".repository."+ type)
+				addCommonImports(imports, type, basePackage)
 			}
 		}
 
 		if (member.method.returnType?.toString()) {
 			def returnType =member.method.returnType?.toString()
-
-			
-			if (returnType) {
-				if (returnType.contains("UUID")) imports.add("java.util.UUID")
-				if (returnType.contains("List")) imports.add("java.util.List")
-				if (returnType.contains("String")) imports.add("java.lang.String")
-				if (returnType.contains("Optional"))	imports.add("java.util.Optional")
-					
-				returnType = getTypeWhenGeneric(returnType)
-				if (returnType.contains("Dto")) imports.add(basePackage + ".dto."+ returnType)
-				if (returnType.contains("Entity")) imports.add(basePackage + ".entity."+ returnType)
-				if (returnType.contains("Controller")) imports.add(basePackage + ".controller."+ returnType)
-				if (!returnType.startsWith("I") && returnType.contains("Service")) imports.add(basePackage + ".service."+ returnType)
-		        if (returnType.startsWith("I") && returnType.contains("Service")) imports.add(basePackage + ".serviceInterface."+ returnType)
-				if (returnType.contains("Repository")) imports.add(basePackage + ".repository."+ returnType)
-			}
+			addCommonImports(imports, returnType, basePackage)
 		}
+	}
+}
+
+private static addCommonImports(Set imports, String importType, String basePackage) {
+	if (importType) {
+		if (importType.contains("UUID")) imports.add("java.util.UUID")
+		if (importType.contains("List")) imports.add("java.util.List")
+		if (importType.contains("String")) imports.add("java.lang.String")
+		if (importType.contains("Integer")) imports.add("java.lang.Integer")
+		if (importType.contains("Optional"))	imports.add("java.util.Optional")
+		if (importType?.contains("Timestamp")) imports.add("java.sql.Timestamp")
+		if (importType?.contains("Date")) imports.add("java.util.Date")
+		if (importType.contains("Boolean")) imports.add("java.lang.Boolean");
+		if (importType.contains("Byte")) imports.add("java.lang.Byte");
+		if (importType.contains("Character")) imports.add("java.lang.Character");
+		if (importType.contains("Class")) imports.add("java.lang.Class");
+		if (importType.contains("ClassLoader")) imports.add("java.lang.ClassLoader");
+		if (importType.contains("Compiler")) imports.add("java.lang.Compiler");
+		if (importType.contains("Double")) imports.add("java.lang.Double");
+		if (importType.contains("Enum")) imports.add("java.lang.Enum");
+		if (importType.contains("Float")) imports.add("java.lang.Float");
+		if (importType.contains("Integer")) imports.add("java.lang.Integer");
+		if (importType.contains("Long")) imports.add("java.lang.Long");
+		if (importType.contains("Math")) imports.add("java.lang.Math");
+		if (importType.contains("Number")) imports.add("java.lang.Number");
+		if (importType.contains("Object")) imports.add("java.lang.Object");
+		if (importType.contains("Package")) imports.add("java.lang.Package");
+		if (importType.contains("Process")) imports.add("java.lang.Process");
+		if (importType.contains("Runtime")) imports.add("java.lang.Runtime");
+		if (importType.contains("RuntimePermission")) imports.add("java.lang.RuntimePermission");
+		if (importType.contains("SecurityManager")) imports.add("java.lang.SecurityManager");
+		if (importType.contains("Short")) imports.add("java.lang.Short");
+		if (importType.contains("StackTraceElement")) imports.add("java.lang.StackTraceElement");
+		if (importType.contains("StrictMath")) imports.add("java.lang.StrictMath");
+		if (importType.contains("String")) imports.add("java.lang.String");
+		if (importType.contains("StringBuffer")) imports.add("java.lang.StringBuffer");
+		if (importType.contains("StringBuilder")) imports.add("java.lang.StringBuilder");
+		if (importType.contains("System")) imports.add("java.lang.System");
+		if (importType.contains("Thread")) imports.add("java.lang.Thread");
+		if (importType.contains("ThreadGroup")) imports.add("java.lang.ThreadGroup");
+		if (importType.contains("Throwable")) imports.add("java.lang.Throwable");
+		if (importType.contains("Void")) imports.add("java.lang.Void");
+
+		importType = getTypeWhenGeneric(importType)
+		if (importType.contains("Dto")) imports.add(basePackage + ".dto."+ importType)
+		if (importType.contains("Entity")) imports.add(basePackage + ".entity."+ importType)
+		if (importType.contains("Controller")) imports.add(basePackage + ".controller."+ importType)
+		if (!importType.startsWith("I") && importType.contains("Service")) imports.add(basePackage + ".service."+ importType)
+		if (importType.startsWith("I") && importType.contains("Service")) imports.add(basePackage + ".serviceInterface."+ importType)
+		if (importType.contains("Repository")) imports.add(basePackage + ".repository."+ importType)
 	}
 }
 
@@ -356,23 +381,6 @@ static void collectMethodImports(MemberDefinition member, Set<String> imports, S
 		}
 		return type
 	}
-
-static void collectPropertyImports(MemberDefinition member, Set<String> imports, String basePackage) {
-	if (member.property) {
-		def type = member.property.type?.toString()
-		if (type?.contains("UUID")) imports.add("java.util.UUID")
-		if (type?.contains("Date")) imports.add("java.util.Date")
-		if (type?.contains("List")) imports.add("java.util.List")
-		if (type?.contains("Timestamp")) imports.add("java.sql.Timestamp")
-		type = getTypeWhenGeneric(type)
-		if (type.contains("Dto")) imports.add(basePackage + ".dto."+ type)
-		if (type.contains("Entity")) imports.add(basePackage + ".entity."+ type)
-		if (type.contains("Controller")) imports.add(basePackage + ".controller."+ type)
-		if (!type.startsWith("I") && type.contains("Service")) imports.add(basePackage + ".service."+ type)
-		if (type.startsWith("I") && type.contains("Service")) imports.add(basePackage + ".serviceInterface."+ type)
-		if (type.contains("Repository")) imports.add(basePackage + ".repository."+ type)
-	}
-}
 
 static void appendClassAnnotations(ClassDefinition cls, StringBuilder content) {
 	cls.annotations?.each { annotation ->
@@ -486,7 +494,10 @@ static Set<String> collectImportsForInterface(InterfaceDefinition interfacedef, 
 
     interfacedef.members.each { member ->
         collectMethodImports(member, imports, basePackage)
-        collectPropertyImports(member, imports, basePackage)
+		if (member.property) {
+			def type = member.property.type?.toString()
+			addCommonImports(imports, type, basePackage)
+		}
     }
 
     if (packageName.contains("repository") && interfacedef.interface) {
