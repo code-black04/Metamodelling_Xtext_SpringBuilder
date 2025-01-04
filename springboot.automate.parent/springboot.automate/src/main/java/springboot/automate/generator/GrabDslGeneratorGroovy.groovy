@@ -324,41 +324,9 @@ private static addCommonImports(Set imports, String importType, String basePacka
 	if (importType) {
 		if (importType.contains("UUID")) imports.add("java.util.UUID")
 		if (importType.contains("List")) imports.add("java.util.List")
-		if (importType.contains("String")) imports.add("java.lang.String")
-		if (importType.contains("Integer")) imports.add("java.lang.Integer")
 		if (importType.contains("Optional"))	imports.add("java.util.Optional")
 		if (importType?.contains("Timestamp")) imports.add("java.sql.Timestamp")
 		if (importType?.contains("Date")) imports.add("java.util.Date")
-		if (importType.contains("Boolean")) imports.add("java.lang.Boolean");
-		if (importType.contains("Byte")) imports.add("java.lang.Byte");
-		if (importType.contains("Character")) imports.add("java.lang.Character");
-		if (importType.contains("Class")) imports.add("java.lang.Class");
-		if (importType.contains("ClassLoader")) imports.add("java.lang.ClassLoader");
-		if (importType.contains("Compiler")) imports.add("java.lang.Compiler");
-		if (importType.contains("Double")) imports.add("java.lang.Double");
-		if (importType.contains("Enum")) imports.add("java.lang.Enum");
-		if (importType.contains("Float")) imports.add("java.lang.Float");
-		if (importType.contains("Integer")) imports.add("java.lang.Integer");
-		if (importType.contains("Long")) imports.add("java.lang.Long");
-		if (importType.contains("Math")) imports.add("java.lang.Math");
-		if (importType.contains("Number")) imports.add("java.lang.Number");
-		if (importType.contains("Object")) imports.add("java.lang.Object");
-		if (importType.contains("Package")) imports.add("java.lang.Package");
-		if (importType.contains("Process")) imports.add("java.lang.Process");
-		if (importType.contains("Runtime")) imports.add("java.lang.Runtime");
-		if (importType.contains("RuntimePermission")) imports.add("java.lang.RuntimePermission");
-		if (importType.contains("SecurityManager")) imports.add("java.lang.SecurityManager");
-		if (importType.contains("Short")) imports.add("java.lang.Short");
-		if (importType.contains("StackTraceElement")) imports.add("java.lang.StackTraceElement");
-		if (importType.contains("StrictMath")) imports.add("java.lang.StrictMath");
-		if (importType.contains("String")) imports.add("java.lang.String");
-		if (importType.contains("StringBuffer")) imports.add("java.lang.StringBuffer");
-		if (importType.contains("StringBuilder")) imports.add("java.lang.StringBuilder");
-		if (importType.contains("System")) imports.add("java.lang.System");
-		if (importType.contains("Thread")) imports.add("java.lang.Thread");
-		if (importType.contains("ThreadGroup")) imports.add("java.lang.ThreadGroup");
-		if (importType.contains("Throwable")) imports.add("java.lang.Throwable");
-		if (importType.contains("Void")) imports.add("java.lang.Void");
 
 		importType = getTypeWhenGeneric(importType)
 		if (importType.contains("Dto")) imports.add(basePackage + ".dto."+ importType)
