@@ -311,6 +311,7 @@ static void collectMethodImports(MemberDefinition member, Set<String> imports, S
 			if (type) {
 				if (type.contains("UUID")) imports.add("java.util.UUID")
 				if (type.contains("List")) imports.add("java.util.List")
+				if (type.contains("String")) imports.add("java.lang.String")
 					
 				type = getTypeWhenGeneric(type)
 				if (type.contains("Dto")) imports.add(basePackage + ".dto."+ type)
@@ -322,11 +323,24 @@ static void collectMethodImports(MemberDefinition member, Set<String> imports, S
 			}
 		}
 
-		if (member.method.returnType?.toString()?.contains("List")) {
-			imports.add("java.util.List")
-		}
-		if (member.method.returnType?.toString()?.contains("Optional")) {
-			imports.add("java.util.Optional")
+		if (member.method.returnType?.toString()) {
+			def returnType =member.method.returnType?.toString()
+
+			
+			if (returnType) {
+				if (returnType.contains("UUID")) imports.add("java.util.UUID")
+				if (returnType.contains("List")) imports.add("java.util.List")
+				if (returnType.contains("String")) imports.add("java.lang.String")
+				if (returnType.contains("Optional"))	imports.add("java.util.Optional")
+					
+				returnType = getTypeWhenGeneric(returnType)
+				if (returnType.contains("Dto")) imports.add(basePackage + ".dto."+ returnType)
+				if (returnType.contains("Entity")) imports.add(basePackage + ".entity."+ returnType)
+				if (returnType.contains("Controller")) imports.add(basePackage + ".controller."+ returnType)
+				if (!returnType.startsWith("I") && returnType.contains("Service")) imports.add(basePackage + ".service."+ returnType)
+		        if (returnType.startsWith("I") && returnType.contains("Service")) imports.add(basePackage + ".serviceInterface."+ returnType)
+				if (returnType.contains("Repository")) imports.add(basePackage + ".repository."+ returnType)
+			}
 		}
 	}
 }

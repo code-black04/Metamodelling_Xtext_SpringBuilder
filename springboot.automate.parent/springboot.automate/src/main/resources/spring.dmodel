@@ -134,6 +134,28 @@ package com.project {
            
             private createdAt: Timestamp
         }
+        
+        @Data
+        @NoArgsConstructor
+        @AllArgsConstructor
+        class PostDto {
+       		private id: UUID
+       		
+       		private tweetId: String
+       		
+       		private userId: String
+       		
+       		private posts: List<PostCommentDto>
+        }
+        
+        @Data
+        @NoArgsConstructor
+        @AllArgsConstructor
+        class PostCommentDto {
+       		private id: UUID
+       		
+       		private post: String
+        }
     }
     
     package entity {
@@ -172,6 +194,40 @@ package com.project {
 	        @OneToMany(mappedBy="user")
 	        private orders: List<TweetEntity>
 	    }
+	    
+	    @Entity
+	    @Table(name="post_comment")
+	    class PostCommentEntity {
+	        @Id
+	        private id: UUID
+	
+	        @Column(name="comment")
+	        private comment: String
+	        
+	        @JoinColumn(name="tweet_id")
+	         private tweet: TweetEntity
+	         
+	         @JoinColumn(name="post_id")
+	         private post: PostEntity
+
+	    }
+	    
+	    @Entity
+	    @Table(name="post")
+	    class PostEntity {
+	        @Id
+	        private id: UUID
+	
+	        @ManyToOne
+	        @JoinColumn(name="user_id")
+	        private user: UsersEntity
+	        
+	        @JoinColumn(name="tweet_id")
+	         private tweet: TweetEntity
+	         	         
+	         @OneToMany(mappedBy="post")
+	        private postComments: List<PostCommentEntity>
+	    }
 	}
 	
 	package serviceInterface {
@@ -188,6 +244,10 @@ package com.project {
             public getUserByUsername(username: String): UsersDto
            
         }
+        
+        interface IPostService {
+           public getAllPostById(tweetId: String): List<PostDto>
+        }
     }
     
     package repository {
@@ -195,6 +255,11 @@ package com.project {
         interface UsersRepository extends <UsersEntity, UUID> {
         	public findByUsername(username: String): Optional<UsersEntity>
         	public findAllUsers(): List<UsersEntity>
+        }
+        
+        @Repository
+        interface PostRepository extends <PostEntity, UUID> {
+        	public getAllPostById(tweetId: String): List<PostDto>
         }
     }
     
@@ -217,6 +282,13 @@ package com.project {
             @Override
             public getUserByUsername(username: String): UsersDto
         }
+        
+        @Service
+        class PostService implements IPostService {
+        
+           @Override
+            public getAllPostById(tweetId: String): List<PostDto>
+        }
        
     }
   
@@ -232,6 +304,9 @@ package com.project {
 
             @RequestMapping(method = "PUT")
             public updateUser(userId: UUID, userDto: UsersDto): void
+            
+            @RequestMapping(method = "PUT")
+            public updateUserName(userId: UUID, name: String): void
 
             @RequestMapping(method = "DELETE")
             public deleteUser(userId: UUID): void
@@ -241,6 +316,16 @@ package com.project {
 
             @RequestMapping(method = "GET")
             public getUserByUsername(username: String): UsersDto
+        }
+        
+        @RestController
+		@RequestMapping(path = "/api/post")
+        class PostController {
+            @Autowired
+            private postService: IPostService
+
+            @RequestMapping(method = "GET")
+            public getAllPostById(tweetId: String): List<PostDto>
         }
     }
 }
