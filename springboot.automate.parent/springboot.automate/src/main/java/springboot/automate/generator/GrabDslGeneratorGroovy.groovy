@@ -288,7 +288,8 @@ static void collectCustomImports(ClassDefinition cls, String packageName, Set<St
 			"org.springframework.http.ResponseEntity"
 		])
 	} else if (packageName.contains("service")) {
-		imports.add("org.springframework.stereotype.Service")
+		imports.addAll(["org.springframework.stereotype.Service",
+						"org.springframework.beans.factory.annotation.Autowired"])
 	} else if (packageName.contains("entity")) {
 		imports.add("javax.persistence.*")
 	} else if (packageName.contains("dto")) {
