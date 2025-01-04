@@ -43,7 +43,7 @@ class GrabDslGeneratorGroovy {
 		def basePackage = model.packageName.toString()
 
 		// Base directory for the generated Spring Boot project
-		def projectBase = new File("generated-springboot-project")
+		def projectBase = new File("Generated_Springboot_Project")
 		projectBase.mkdirs()
 
 		// Generate project structure
