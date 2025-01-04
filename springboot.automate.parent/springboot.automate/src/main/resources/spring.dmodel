@@ -158,11 +158,13 @@ package com.project {
 	        
 	        @Column(name="created_at")
 	        private createdAt: Timestamp
+	        
+	        @OneToMany(mappedBy="user", cascade=CascadeType.ALL, orphanRemoval=true)
+	        private orders: List<TweetEntity>
 	    }
 	}
 	
 	package serviceInterface {
-    	@Interface
     	interface IUsersService {
            
             public createUsers(userDto: UsersDto): void

@@ -11,6 +11,10 @@ import com.google.inject.Injector
 import groovy.json.StringEscapeUtils
 import groovy.transform.Field
 import java.lang.reflect.Method
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.Paths
+
 import springboot.automate.GrabDslStandaloneSetup
 import springboot.automate.grabDsl.Model
 import springboot.automate.grabDsl.PackageDefinition
@@ -31,17 +35,23 @@ class GrabDslGeneratorGroovy {
 		// Load the DSL model from a file
 		def resource = resourceSet.getResource(URI.createFileURI("src/main/resources/spring.dmodel"), true)
 		def model = resource.getContents().get(0) as Model
+		
+		// Define the base path for Java files
+		def basePath = "src/main/java"
+	
+		// Extract the base package from the model
+		def basePackage = model.packageName.toString()
 
 		// Base directory for the generated Spring Boot project
 		def projectBase = new File("generated-springboot-project")
 		projectBase.mkdirs()
 
 		// Generate project structure
-		generateProjectStructure(model, projectBase)
+		generateProjectStructure(model, projectBase, basePath, basePackage)
 		//		println "Spring Boot project generated at: ${projectBase.absolutePath}"
 	}
 
-	static void generateProjectStructure(Model model, File projectBase) {
+	static void generateProjectStructure(Model model, File projectBase, String basePath, String basePackage) {
 		// Create standard Spring Boot folders
 		def mainJavaDir = new File(projectBase, "src/main/java")
 		def mainResourcesDir = new File(projectBase, "src/main/resources")
@@ -60,7 +70,7 @@ class GrabDslGeneratorGroovy {
 
 		// Process the packages in the model
 		model.packages.each { pkg ->
-			generatePackage(pkg, mainJavaDir, model.packageName.toString())
+			generatePackage(pkg, mainJavaDir, model.packageName.toString(), basePath, basePackage)
 		}
 
 		// Write application.properties file
@@ -175,7 +185,7 @@ public class Main {
 	println "pom.xml file written: ${pomFile.absolutePath}"
 }
 
-static void generatePackage(PackageDefinition pkg, File baseDir, String parentPackageName) {
+static void generatePackage(PackageDefinition pkg, File baseDir, String parentPackageName, String basePath, String basePackage) {
 	def packageName = pkg.packageName?.toString()
 	//	println "Processing package: $packageName"
 
@@ -202,19 +212,21 @@ static void generatePackage(PackageDefinition pkg, File baseDir, String parentPa
 		cls.annotations = cls.annotations.unique { it.name }
 		//		println "Found class: ${cls.name}"
 		//		println "Class ${idx + 1}: ${cls.name} | Annotations: ${cls.annotations?.collect { it.name }}"
-		generateClass(cls, packageDir)
+		generateClass(cls, packageDir, basePath, basePackage)
 	}
 
 	pkg.interfaces?.eachWithIndex { interfacedef, idx ->
-		// Merge package-level annotations with interface-level annotations
-		interfacedef.annotations = (interfacedef.annotations ?: []) + (pkg.annotations ?: [])
-		interfacedef.annotations = interfacedef.annotations.unique { it.name }
-		//		println "Found interface: ${interfacedef.name}"
-		generateInterface(interfacedef, packageDir) // Correct method for interfaces
+		
+		if (!interfacedef.annotations.empty || !pkg.annotations.empty) {
+			// Merge package-level annotations with interface-level annotations
+			interfacedef.annotations = (interfacedef.annotations ?: []) + (pkg.annotations ?: [])
+			interfacedef.annotations = interfacedef.annotations.unique { it.name }
+		}
+		generateInterface(interfacedef, packageDir, basePath, basePackage) // Correct method for interfaces
 	}
 }
 
-static void generateClass(ClassDefinition cls, File packageDir) {
+static void generateClass(ClassDefinition cls, File packageDir, String basePath, String basePackage) {
 
 	def isInterface = false
 	//	println "Generating class: ${cls.name} in package: ${packageDir.absolutePath}"
@@ -246,11 +258,7 @@ static void generateClass(ClassDefinition cls, File packageDir) {
 	} else if (packageName.contains("service")) {
 		imports.add("org.springframework.stereotype.Service");
 	} else if(packageName.contains("entity")) {
-		imports.add("javax.persistence.Column");
-		imports.add("javax.persistence.Entity");
-		imports.add("javax.persistence.GeneratedValue");
-		imports.add("javax.persistence.Id");
-		imports.add("javax.persistence.Table");
+		imports.add("javax.persistence.*");
 	} else if(packageName.contains("dto")) {
 		imports.add("lombok.AllArgsConstructor");
 		imports.add("lombok.Data");
@@ -290,6 +298,11 @@ static void generateClass(ClassDefinition cls, File packageDir) {
 					if (type.contains("List")) {
 						imports.add("java.util.List") // Add List import
 					}
+				}
+				
+				// Check return type
+				if (member.method.returnType?.toString()?.contains("List")) {
+					imports.add("java.util.List") // Add List import
 				}
 			}
 		}
@@ -360,7 +373,7 @@ static void generateClass(ClassDefinition cls, File packageDir) {
 }
 
 
-static void generateInterface(InterfaceDefinition interfacedef, File packageDir) {
+static void generateInterface(InterfaceDefinition interfacedef, File packageDir, String basePath, String basePackage) {
 
 	def isInterface = true
 
@@ -422,6 +435,17 @@ static void generateInterface(InterfaceDefinition interfacedef, File packageDir)
 			}
 			if (member.method.returnType?.toString()?.contains("Optional")) {
 				imports.add("java.util.Optional");
+
+				def genericMatch = (member.method.returnType?.toString() =~ /Optional<(.+?)>/)
+				if (genericMatch) {
+					genericMatch.each { match ->
+						def genericType = match[1]
+						def completeBasePath = Paths.get(basePath, basePackage.replace('.', File.separator)).toString()
+						// Resolve package dynamically by checking imports or project structure
+                        def resolvedType = resolveFullType(genericType, completeBasePath, basePackage)
+                        imports.add(resolvedType) // Add dynamically resolved type
+					}
+				}
 			}
 		}
 
@@ -491,6 +515,32 @@ static void generateInterface(InterfaceDefinition interfacedef, File packageDir)
 	content.append("}")
 	interfaceFile.text = content.toString()
 	//	println "interface file written: ${interfaceFile.absolutePath}"
+}
+
+// Helper function to resolve full type dynamically
+static String resolveFullType(String type, String completeBasePath, String basePackage) {
+	def possiblePackages = ["controller", "dto", "entity", "repository", "service", "serviceInterface"]
+	def completePathPackage=""
+    for (pkg in possiblePackages) {
+        if (!checkTypeExists(completeBasePath)) {
+			completePathPackage = "com.project.${pkg}.${type}"
+            return "com.project.*"
+        }
+    }
+    return completePathPackage
+}
+
+// Mock function to simulate checking if a type exists in a package
+static Boolean checkTypeExists(String fullPackage) {
+    try {
+        // Construct the full path to the expected file
+        def filePath = Paths.get(fullPackage.replace('.', File.separator) + ".java")
+		println "FILEPATH ${filePath}"
+        return Files.exists(filePath) // Check if the file exists
+    } catch (Exception e) {
+        e.printStackTrace()
+        return false
+    }
 }
 
 
