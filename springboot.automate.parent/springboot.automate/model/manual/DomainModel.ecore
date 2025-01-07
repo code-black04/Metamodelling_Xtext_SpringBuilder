@@ -24,7 +24,6 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EntityType">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="entity" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PomXml">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="groupId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -33,32 +32,24 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="packaging" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="properties" eType="#//Properties"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="dependencies" eType="#//Dependencies"
-        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="build" eType="#//Build"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dependency" upperBound="-1"
+        eType="#//Dependency" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ClassDefinition">
     <eStructuralFeatures xsi:type="ecore:EReference" name="annotations" upperBound="-1"
         eType="#//Annotation" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="interface" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="members" upperBound="-1"
-        eType="#//MemberDefinition" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="methoddefinition" upperBound="-1"
+        eType="#//MethodDefinition" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="propertydefinition" upperBound="-1"
+        eType="#//PropertyDefinition" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Properties">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="javaVersion" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="springBootVersion" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Dependencies">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="dependencies" upperBound="-1"
-        eType="#//Dependency" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="MemberDefinition">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="method" eType="#//MethodDefinition"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="property" eType="#//PropertyDefinition"
-        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PackageDefinition">
     <eStructuralFeatures xsi:type="ecore:EReference" name="annotations" upperBound="-1"
@@ -75,8 +66,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="interface" eType="#//EntityType"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="members" upperBound="-1"
-        eType="#//MemberDefinition" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="methoddefinition" upperBound="-1"
+        eType="#//MethodDefinition" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PropertyDefinition">
     <eStructuralFeatures xsi:type="ecore:EReference" name="annotations" upperBound="-1"
