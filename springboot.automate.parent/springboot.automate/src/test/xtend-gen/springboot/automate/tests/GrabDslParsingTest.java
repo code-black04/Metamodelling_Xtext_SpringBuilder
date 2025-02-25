@@ -18,6 +18,7 @@ public class GrabDslParsingTest {
   private /* ParseHelper<Model> */Object parseHelper;
 
   @Test
+  @Deprecated
   public void loadModel() {
     throw new Error("Unresolved compilation problems:"
       + "\nThe field GrabDslParsingTest.parseHelper refers to the missing type Model"
